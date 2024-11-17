@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MEOWMEOW UWU</title>
+    <title>black-friday-deals jk fake title UWU</title>
     <!-- Load React -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -78,16 +78,37 @@
             const [openedBoxes, setOpenedBoxes] = React.useState({});
             const [showLoginPrompt, setShowLoginPrompt] = React.useState(true);
 
-            // Box contents (same as before)
             const boxContents = {
-                1: { image: "/api/placeholder/150/150", text: "A cute plushie! 🧸" },
-                // ... (rest of the contents)
-                25: { image: "/api/placeholder/150/150", text: "Special surprise 🎉" },
+                1: { image: "https://placehold.co/150x150/emerald/white/png", text: "A cute plushie! 🧸" },
+                2: { image: "https://placehold.co/150x150/emerald/white/png", text: "Chocolate cookies 🍪" },
+                3: { image: "https://placehold.co/150x150/emerald/white/png", text: "Warm mittens 🧤" },
+                4: { image: "https://placehold.co/150x150/emerald/white/png", text: "Hot cocoa mix ☕" },
+                5: { image: "https://placehold.co/150x150/emerald/white/png", text: "Candy cane 🍬" },
+                6: { image: "https://placehold.co/150x150/emerald/white/png", text: "Holiday socks 🧦" },
+                7: { image: "https://placehold.co/150x150/emerald/white/png", text: "Mini snowglobe ❄️" },
+                8: { image: "https://placehold.co/150x150/emerald/white/png", text: "Scented candle 🕯️" },
+                9: { image: "https://placehold.co/150x150/emerald/white/png", text: "Festive stickers 🌟" },
+                10: { image: "https://placehold.co/150x150/emerald/white/png", text: "Cozy scarf 🧣" },
+                11: { image: "https://placehold.co/150x150/emerald/white/png", text: "Gift card 🎁" },
+                12: { image: "https://placehold.co/150x150/emerald/white/png", text: "Holiday mug ☕" },
+                13: { image: "https://placehold.co/150x150/emerald/white/png", text: "Mini puzzle 🧩" },
+                14: { image: "https://placehold.co/150x150/emerald/white/png", text: "Chocolate bar 🍫" },
+                15: { image: "https://placehold.co/150x150/emerald/white/png", text: "Cute keychain 🔑" },
+                16: { image: "https://placehold.co/150x150/emerald/white/png", text: "Holiday pins 📌" },
+                17: { image: "https://placehold.co/150x150/emerald/white/png", text: "Mini journal 📔" },
+                18: { image: "https://placehold.co/150x150/emerald/white/png", text: "Fairy lights ✨" },
+                19: { image: "https://placehold.co/150x150/emerald/white/png", text: "Tea sampler 🫖" },
+                20: { image: "https://placehold.co/150x150/emerald/white/png", text: "Cookie cutters 🍪" },
+                21: { image: "https://placehold.co/150x150/emerald/white/png", text: "Mini plant 🌱" },
+                22: { image: "https://placehold.co/150x150/emerald/white/png", text: "Washi tape 🎨" },
+                23: { image: "https://placehold.co/150x150/emerald/white/png", text: "Bath bomb 🛁" },
+                24: { image: "https://placehold.co/150x150/emerald/white/png", text: "Holiday cards 💌" },
+                25: { image: "https://placehold.co/150x150/emerald/white/png", text: "Special surprise 🎉" },
             };
 
             const handleLogin = (e) => {
                 e.preventDefault();
-                if (password === 'ILOVESPY') {
+                if (password === 'COWBOY') {
                     setIsAuthenticated(true);
                     setShowLoginPrompt(false);
                     setError('');
@@ -97,8 +118,11 @@
                 }
             };
 
-            const handleBoxClick = (boxId) => {
-                setOpenedBoxes(prev => ({ ...prev, [boxId]: true }));
+            const handleBoxClick = (e, boxId) => {
+                e.preventDefault();
+                if (isAuthenticated) {
+                    setOpenedBoxes(prev => ({ ...prev, [boxId]: true }));
+                }
             };
 
             // Calendar Background
@@ -126,7 +150,7 @@
                                     <motion.div
                                         key={boxNumber}
                                         className="aspect-square relative perspective-1000"
-                                        onClick={() => isAuthenticated && !isOpen && handleBoxClick(boxNumber)}
+                                        onClick={(e) => !isOpen && handleBoxClick(e, boxNumber)}
                                     >
                                         <AnimatePresence>
                                             {!isOpen ? (
@@ -218,7 +242,7 @@
                                         transition={{ type: "spring", bounce: 0.5 }}
                                     >
                                         <img 
-                                            src="https://media.tenor.com/iEHRqpFwqvUAAAAd/awkward-the-rock.gif" 
+                                            src="https://media.tenor.com/kHcmsxlKHEAAAAAM/rock-one-eyebrow-raised-rock-staring.gif" 
                                             alt="Suspicious Rock" 
                                             className="w-64 h-64 object-cover rounded-lg"
                                         />
