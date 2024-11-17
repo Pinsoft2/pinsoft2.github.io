@@ -4,173 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MEOWMEOW UWU</title>
+    <!-- React and ReactDOM -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <!-- Framer Motion -->
+    <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load our components -->
+    <script src="https://unpkg.com/@radix-ui/react-dialog"></script>
+    <script src="https://unpkg.com/@radix-ui/react-slot"></script>
+    <!-- Your custom styles -->
     <style>
         body {
-            background-color: #065f46;
-            min-height: 100vh;
             margin: 0;
-            padding: 20px;
-        }
-
-        .card {
-            background-color: #064e3b;
-            border-radius: 8px;
-            padding: 32px;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 16px;
-            margin-top: 32px;
-        }
-
-        .box {
-            aspect-ratio: 1;
-            background-color: #059669;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 1.25rem;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .box:hover {
-            transform: scale(1.05);
-            background-color: #047857;
-        }
-
-        .title {
-            color: #fbbf24;
-            font-size: 2.5rem;
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .footer {
-            color: #fbbf24;
-            font-size: 1.5rem;
-            text-align: center;
-            margin-top: 2rem;
-        }
-
-        /* Login Form Styles */
-        .login-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .login-card {
-            background-color: white;
-            padding: 32px;
-            border-radius: 8px;
-            width: 100%;
-            max-width: 400px;
-        }
-
-        .input {
-            width: 100%;
-            padding: 8px 16px;
-            margin: 8px 0;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 1rem;
-        }
-
-        .button {
-            width: 100%;
-            padding: 8px 16px;
-            background-color: #059669;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .button:hover {
-            background-color: #047857;
+            padding: 0;
+            background-color: #065f46;
         }
     </style>
 </head>
 <body>
-    <div class="card">
-        <h1 class="title">MEOWMEOW UWU</h1>
-        
-        <div class="grid-container" id="calendar">
-            <!-- Calendar boxes will be generated here -->
-        </div>
-
-        <div class="footer">⭐ for my bb only ❤️ ⭐</div>
-    </div>
-
-    <!-- Login Dialog -->
-    <div class="login-overlay" id="loginOverlay">
-        <div class="login-card">
-            <h2 class="text-2xl font-bold text-center mb-6">🎄 Enter Password 🎄</h2>
-            <div id="errorContainer" class="hidden text-center mb-4">
-                <img src="https://media.tenor.com/iEHRqpFwqvUAAAAd/awkward-the-rock.gif" 
-                     alt="Suspicious Rock" 
-                     class="w-64 h-64 object-cover rounded-lg mx-auto mb-4">
-                <p class="text-6xl">🤨</p>
-            </div>
-            <form id="loginForm">
-                <input type="password" id="passwordInput" class="input" placeholder="Password">
-                <button type="submit" class="button">Unlock Calendar</button>
-            </form>
-        </div>
-    </div>
-
-    <script>
-        // Generate calendar boxes
-        const calendar = document.getElementById('calendar');
-        for (let i = 1; i <= 25; i++) {
-            const box = document.createElement('div');
-            box.className = 'box';
-            box.textContent = i;
-            box.onclick = () => alert(`Box ${i} content here!`);
-            calendar.appendChild(box);
-        }
-
-        // Handle login
-        const loginForm = document.getElementById('loginForm');
-        const loginOverlay = document.getElementById('loginOverlay');
-        const passwordInput = document.getElementById('passwordInput');
-        const errorContainer = document.getElementById('errorContainer');
-
-        loginForm.onsubmit = (e) => {
-            e.preventDefault();
-            if (passwordInput.value === 'ILOVESPY') {
-                loginOverlay.style.display = 'none';
-                localStorage.setItem('advent-auth', 'true');
-            } else {
-                errorContainer.classList.remove('hidden');
-                passwordInput.value = '';
-            }
-        };
-
-        // Check if already logged in
-        if (localStorage.getItem('advent-auth') === 'true') {
-            loginOverlay.style.display = 'none';
-        }
-    </script>
+    <div id="root"></div>
+    <script src="app.js" type="module"></script>
 </body>
 </html>
