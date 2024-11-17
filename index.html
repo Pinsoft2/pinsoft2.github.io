@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-<!-- Previous head content remains the same -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,8 +13,25 @@
         body {
             margin: 0;
             min-height: 100vh;
-            background-color: #065f46;
         }
+
+        .main-container {
+            min-height: 100vh;
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+                        url('https://images.squarespace-cdn.com/content/v1/6029be12fff66b0cea7cc683/1e404cc4-cf27-4a58-a1bf-1af6ebd5f32d/OChristmasTree2.jpeg?format=1500w');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            padding: 2rem;
+        }
+
+        .calendar-card {
+            background-color: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
         .perspective-1000 {
             perspective: 1000px;
         }
@@ -62,179 +78,149 @@
         .float {
             animation: float 3s ease-in-out infinite;
         }
+
+        .dialog-content {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
     </style>
 </head>
 <body>
     <div id="root"></div>
 
     <script type="text/babel" data-type="module">
-        // Previous component imports remain the same
+        // Previous sparkle component and other components remain the same
         const { motion, AnimatePresence } = Motion;
 
-        // Sparkle Component
-        const Sparkles = ({ isActive }) => {
-            const sparkleCount = 12;
-            
-            return isActive ? (
-                <div className="absolute inset-0 pointer-events-none">
-                    {Array.from({ length: sparkleCount }).map((_, i) => {
-                        const angle = (i / sparkleCount) * 360;
-                        const radius = 50;
-                        const tx = Math.cos(angle * Math.PI / 180) * radius;
-                        const ty = Math.sin(angle * Math.PI / 180) * radius;
-                        
-                        return (
-                            <motion.div
-                                key={i}
-                                className="sparkle"
-                                style={{
-                                    '--tx': `${tx}px`,
-                                    '--ty': `${ty}px`,
-                                    left: '50%',
-                                    top: '50%',
-                                    animationDelay: `${i * 0.1}s`
-                                }}
-                                initial={{ opacity: 0, scale: 0 }}
-                                animate={{ opacity: [0, 1, 0], scale: [0.5, 1.2, 0.5] }}
-                                transition={{ 
-                                    duration: 1,
-                                    delay: i * 0.1,
-                                    ease: "easeInOut"
-                                }}
-                            />
-                        );
-                    })}
-                </div>
-            ) : null;
-        };
+        // ... (previous component definitions) ...
 
-        // Main Calendar Component
         const AdventCalendar = () => {
-            // ... previous state declarations ...
-            
-            const [activeSparkles, setActiveSparkles] = React.useState(null);
-
-            const handleBoxClick = (e, boxId) => {
-                e.preventDefault();
-                if (isAuthenticated && !openedBoxes[boxId]) {
-                    setActiveSparkles(boxId);
-                    setOpenedBoxes(prev => ({ ...prev, [boxId]: true }));
-                    setTimeout(() => setActiveSparkles(null), 1000);
-                }
-            };
-
-            // In the box rendering section, update the animation part:
-            const renderBox = (boxNumber) => {
-                const isOpen = openedBoxes[boxNumber];
-                const content = boxContents[boxNumber];
-                const isSparkleActive = activeSparkles === boxNumber;
-
-                return (
-                    <motion.div
-                        key={boxNumber}
-                        className="aspect-square relative perspective-1000"
-                        onClick={(e) => !isOpen && handleBoxClick(e, boxNumber)}
-                    >
-                        <AnimatePresence>
-                            {!isOpen ? (
-                                <motion.div
-                                    initial={false}
-                                    className={`
-                                        absolute 
-                                        inset-0 
-                                        bg-emerald-600 
-                                        text-emerald-100
-                                        rounded-lg
-                                        flex 
-                                        items-center 
-                                        justify-center 
-                                        text-xl 
-                                        font-bold 
-                                        cursor-pointer 
-                                        ${!isAuthenticated && 'opacity-50 cursor-not-allowed'}
-                                    `}
-                                    whileHover={isAuthenticated ? { scale: 1.1 } : {}}
-                                    whileTap={isAuthenticated ? { scale: 0.95 } : {}}
-                                >
-                                    {boxNumber}
-                                </motion.div>
-                            ) : (
-                                <motion.div
-                                    initial={{ rotateY: 90, scale: 0.3, opacity: 0 }}
-                                    animate={{ 
-                                        rotateY: 0, 
-                                        scale: 1, 
-                                        opacity: 1,
-                                    }}
-                                    transition={{ 
-                                        type: "spring",
-                                        stiffness: 100,
-                                        damping: 15,
-                                        duration: 0.8
-                                    }}
-                                    className="
-                                        absolute 
-                                        inset-0 
-                                        bg-emerald-500 
-                                        rounded-lg 
-                                        p-2 
-                                        flex 
-                                        flex-col 
-                                        items-center 
-                                        justify-center 
-                                        text-white
-                                        shadow-lg
-                                        overflow-hidden
-                                        shimmer
-                                    "
-                                >
-                                    <Sparkles isActive={isSparkleActive} />
-                                    <motion.div
-                                        initial={{ y: 20, opacity: 0 }}
-                                        animate={{ y: 0, opacity: 1 }}
-                                        transition={{ delay: 0.3 }}
-                                        className="float"
-                                    >
-                                        <img 
-                                            src={content.image} 
-                                            alt={content.text}
-                                            className="w-full h-1/2 object-cover rounded-md mb-2"
-                                        />
-                                        <motion.p 
-                                            initial={{ opacity: 0 }}
-                                            animate={{ opacity: 1 }}
-                                            transition={{ delay: 0.5 }}
-                                            className="text-xs text-center font-medium"
-                                        >
-                                            {content.text}
-                                        </motion.p>
-                                    </motion.div>
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
-                    </motion.div>
-                );
-            };
-
-            // ... rest of the component remains the same ...
+            // ... (previous state and handlers) ...
 
             return (
-                <div className="min-h-screen bg-emerald-900 p-8">
-                    <Card className="max-w-4xl mx-auto p-8 bg-emerald-800 relative overflow-hidden">
-                        {/* ... header content ... */}
+                <div className="main-container">
+                    <Card className="calendar-card max-w-4xl mx-auto p-8 relative overflow-hidden">
+                        <div className="absolute top-0 right-0 text-amber-200 text-4xl">🍃</div>
+                        <div className="absolute top-0 left-0 text-amber-200 text-4xl">🍃</div>
                         
+                        <motion.h1 
+                            initial={{ y: -20, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            className="text-4xl font-bold text-amber-200 text-center mb-8 text-shadow"
+                        >
+                            MEOWMEOW UWU
+                        </motion.h1>
+                        
+                        {/* Rest of your calendar grid */}
                         <div className="grid grid-cols-5 gap-4">
-                            {Array.from({ length: 25 }, (_, i) => renderBox(i + 1))}
+                            {Array.from({ length: 25 }, (_, i) => {
+                                const boxNumber = i + 1;
+                                const isOpen = openedBoxes[boxNumber];
+                                const content = boxContents[boxNumber];
+
+                                return (
+                                    <motion.div
+                                        key={boxNumber}
+                                        className="aspect-square relative perspective-1000"
+                                        onClick={(e) => !isOpen && handleBoxClick(e, boxNumber)}
+                                    >
+                                        <AnimatePresence>
+                                            {!isOpen ? (
+                                                <motion.div
+                                                    initial={false}
+                                                    className={`
+                                                        absolute 
+                                                        inset-0 
+                                                        bg-amber-600/90
+                                                        text-amber-100
+                                                        rounded-lg
+                                                        flex 
+                                                        items-center 
+                                                        justify-center 
+                                                        text-xl 
+                                                        font-bold 
+                                                        cursor-pointer 
+                                                        backdrop-blur-sm
+                                                        ${!isAuthenticated && 'opacity-50 cursor-not-allowed'}
+                                                    `}
+                                                    whileHover={isAuthenticated ? { scale: 1.1 } : {}}
+                                                    whileTap={isAuthenticated ? { scale: 0.95 } : {}}
+                                                >
+                                                    {boxNumber}
+                                                </motion.div>
+                                            ) : (
+                                                <motion.div
+                                                    initial={{ rotateY: 90, scale: 0.3, opacity: 0 }}
+                                                    animate={{ 
+                                                        rotateY: 0, 
+                                                        scale: 1, 
+                                                        opacity: 1,
+                                                    }}
+                                                    transition={{ 
+                                                        type: "spring",
+                                                        stiffness: 100,
+                                                        damping: 15,
+                                                        duration: 0.8
+                                                    }}
+                                                    className="
+                                                        absolute 
+                                                        inset-0 
+                                                        bg-amber-500/90 
+                                                        rounded-lg 
+                                                        p-2 
+                                                        flex 
+                                                        flex-col 
+                                                        items-center 
+                                                        justify-center 
+                                                        text-white
+                                                        shadow-lg
+                                                        overflow-hidden
+                                                        backdrop-blur-sm
+                                                        shimmer
+                                                    "
+                                                >
+                                                    <Sparkles isActive={true} />
+                                                    <motion.div
+                                                        initial={{ y: 20, opacity: 0 }}
+                                                        animate={{ y: 0, opacity: 1 }}
+                                                        transition={{ delay: 0.3 }}
+                                                        className="float"
+                                                    >
+                                                        <img 
+                                                            src={content.image} 
+                                                            alt={content.text}
+                                                            className="w-full h-1/2 object-cover rounded-md mb-2"
+                                                        />
+                                                        <motion.p 
+                                                            initial={{ opacity: 0 }}
+                                                            animate={{ opacity: 1 }}
+                                                            transition={{ delay: 0.5 }}
+                                                            className="text-xs text-center font-medium"
+                                                        >
+                                                            {content.text}
+                                                        </motion.p>
+                                                    </motion.div>
+                                                </motion.div>
+                                            )}
+                                        </AnimatePresence>
+                                    </motion.div>
+                                );
+                            })}
                         </div>
-                        
-                        {/* ... footer content ... */}
+
+                        <motion.div 
+                            initial={{ y: 20, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            className="mt-8 flex justify-center"
+                        >
+                            <div className="text-amber-200 text-2xl">⭐ for my bb only ❤️ ⭐</div>
+                        </motion.div>
                     </Card>
                     {loginDialog}
                 </div>
             );
         };
 
-        // Render the app
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<AdventCalendar />);
     </script>
