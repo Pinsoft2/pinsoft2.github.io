@@ -4,27 +4,261 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MEOWMEOW UWU</title>
-    <!-- React and ReactDOM -->
+    <!-- Load React -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <!-- Framer Motion -->
-    <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
-    <!-- Tailwind CSS -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Load Framer Motion -->
+    <script src="https://unpkg.com/framer-motion@10.16.16/dist/framer-motion.js"></script>
+    <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Load our components -->
-    <script src="https://unpkg.com/@radix-ui/react-dialog"></script>
-    <script src="https://unpkg.com/@radix-ui/react-slot"></script>
-    <!-- Your custom styles -->
     <style>
         body {
             margin: 0;
-            padding: 0;
+            min-height: 100vh;
             background-color: #065f46;
+        }
+        .perspective-1000 {
+            perspective: 1000px;
         }
     </style>
 </head>
 <body>
     <div id="root"></div>
-    <script src="app.js" type="module"></script>
+
+    <script type="text/babel" data-type="module">
+        // Import necessary components from framer-motion
+        const { motion, AnimatePresence } = Motion;
+
+        // Create basic versions of shadcn components
+        const Card = ({ className, children }) => (
+            <div className={`bg-white rounded-lg shadow-lg ${className}`}>
+                {children}
+            </div>
+        );
+
+        const Input = ({ className, ...props }) => (
+            <input
+                className={`px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 ${className}`}
+                {...props}
+            />
+        );
+
+        const Button = ({ className, children, ...props }) => (
+            <button
+                className={`px-4 py-2 rounded-md text-white transition-colors ${className}`}
+                {...props}
+            >
+                {children}
+            </button>
+        );
+
+        const Dialog = ({ open, children }) => {
+            if (!open) return null;
+            return (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+                    <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
+                        {children}
+                    </div>
+                </div>
+            );
+        };
+
+        const DialogContent = ({ children }) => <div className="p-6">{children}</div>;
+        const DialogHeader = ({ children }) => <div className="mb-4">{children}</div>;
+        const DialogTitle = ({ children, className }) => (
+            <h2 className={`text-2xl font-bold ${className}`}>{children}</h2>
+        );
+
+        // Main Calendar Component
+        const AdventCalendar = () => {
+            const [isAuthenticated, setIsAuthenticated] = React.useState(false);
+            const [password, setPassword] = React.useState('');
+            const [error, setError] = React.useState('');
+            const [openedBoxes, setOpenedBoxes] = React.useState({});
+            const [showLoginPrompt, setShowLoginPrompt] = React.useState(true);
+
+            // Box contents (same as before)
+            const boxContents = {
+                1: { image: "/api/placeholder/150/150", text: "A cute plushie! 🧸" },
+                // ... (rest of the contents)
+                25: { image: "/api/placeholder/150/150", text: "Special surprise 🎉" },
+            };
+
+            const handleLogin = (e) => {
+                e.preventDefault();
+                if (password === 'ILOVESPY') {
+                    setIsAuthenticated(true);
+                    setShowLoginPrompt(false);
+                    setError('');
+                } else {
+                    setError('🤨');
+                    setPassword('');
+                }
+            };
+
+            const handleBoxClick = (boxId) => {
+                setOpenedBoxes(prev => ({ ...prev, [boxId]: true }));
+            };
+
+            // Calendar Background
+            const calendarBackground = (
+                <div className="min-h-screen bg-emerald-900 p-8">
+                    <Card className="max-w-4xl mx-auto p-8 bg-emerald-800 relative overflow-hidden">
+                        <div className="absolute top-0 right-0 text-emerald-600 text-4xl">🍃</div>
+                        <div className="absolute top-0 left-0 text-emerald-600 text-4xl">🍃</div>
+                        
+                        <motion.h1 
+                            initial={{ y: -20, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            className="text-4xl font-bold text-yellow-400 text-center mb-8"
+                        >
+                            MEOWMEOW UWU
+                        </motion.h1>
+                        
+                        <div className="grid grid-cols-5 gap-4">
+                            {Array.from({ length: 25 }, (_, i) => {
+                                const boxNumber = i + 1;
+                                const isOpen = openedBoxes[boxNumber];
+                                const content = boxContents[boxNumber];
+
+                                return (
+                                    <motion.div
+                                        key={boxNumber}
+                                        className="aspect-square relative perspective-1000"
+                                        onClick={() => isAuthenticated && !isOpen && handleBoxClick(boxNumber)}
+                                    >
+                                        <AnimatePresence>
+                                            {!isOpen ? (
+                                                <motion.div
+                                                    initial={false}
+                                                    className={`
+                                                        absolute 
+                                                        inset-0 
+                                                        bg-emerald-600 
+                                                        text-emerald-100
+                                                        rounded-lg
+                                                        flex 
+                                                        items-center 
+                                                        justify-center 
+                                                        text-xl 
+                                                        font-bold 
+                                                        cursor-pointer 
+                                                        ${!isAuthenticated && 'opacity-50 cursor-not-allowed'}
+                                                    `}
+                                                    whileHover={isAuthenticated ? { scale: 1.1 } : {}}
+                                                    whileTap={isAuthenticated ? { scale: 0.95 } : {}}
+                                                >
+                                                    {boxNumber}
+                                                </motion.div>
+                                            ) : (
+                                                <motion.div
+                                                    initial={{ rotateY: 90 }}
+                                                    animate={{ rotateY: 0 }}
+                                                    transition={{ 
+                                                        type: "spring",
+                                                        stiffness: 100,
+                                                        damping: 15
+                                                    }}
+                                                    className="
+                                                        absolute 
+                                                        inset-0 
+                                                        bg-emerald-500 
+                                                        rounded-lg 
+                                                        p-2 
+                                                        flex 
+                                                        flex-col 
+                                                        items-center 
+                                                        justify-center 
+                                                        text-white
+                                                        shadow-lg
+                                                        overflow-hidden
+                                                    "
+                                                >
+                                                    <img 
+                                                        src={content.image} 
+                                                        alt={content.text}
+                                                        className="w-full h-1/2 object-cover rounded-md mb-2"
+                                                    />
+                                                    <p className="text-xs text-center font-medium">
+                                                        {content.text}
+                                                    </p>
+                                                </motion.div>
+                                            )}
+                                        </AnimatePresence>
+                                    </motion.div>
+                                );
+                            })}
+                        </div>
+
+                        <motion.div 
+                            initial={{ y: 20, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            className="mt-8 flex justify-center"
+                        >
+                            <div className="text-yellow-400 text-2xl">⭐ for my bb only ❤️ ⭐</div>
+                        </motion.div>
+                    </Card>
+                </div>
+            );
+
+            // Login Dialog
+            const loginDialog = (
+                <Dialog open={showLoginPrompt}>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle className="text-center">🎄 Enter Password 🎄</DialogTitle>
+                        </DialogHeader>
+                        <form onSubmit={handleLogin} className="space-y-4">
+                            {error && (
+                                <div className="flex flex-col items-center space-y-4">
+                                    <motion.div
+                                        initial={{ scale: 0 }}
+                                        animate={{ scale: 1 }}
+                                        transition={{ type: "spring", bounce: 0.5 }}
+                                    >
+                                        <img 
+                                            src="https://media.tenor.com/iEHRqpFwqvUAAAAd/awkward-the-rock.gif" 
+                                            alt="Suspicious Rock" 
+                                            className="w-64 h-64 object-cover rounded-lg"
+                                        />
+                                    </motion.div>
+                                    <motion.p 
+                                        initial={{ scale: 0 }}
+                                        animate={{ scale: 1 }}
+                                        className="text-6xl text-center"
+                                    >
+                                        {error}
+                                    </motion.p>
+                                </div>
+                            )}
+                            <Input
+                                type="password"
+                                placeholder="Password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                className="w-full text-center"
+                                autoFocus
+                            />
+                            <Button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-700">
+                                Unlock Calendar
+                            </Button>
+                        </form>
+                    </DialogContent>
+                </Dialog>
+            );
+
+            return (
+                <>
+                    {calendarBackground}
+                    {loginDialog}
+                </>
+            );
+        };
+
+        // Render the app
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<AdventCalendar />);
+    </script>
 </body>
 </html>
