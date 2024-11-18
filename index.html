@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MEOWMEOW UWU</title>
+    <title>Black Friday Sale Homepage LOL JK</title>
     <style>
         body {
             margin: 0;
@@ -41,7 +41,7 @@
             padding: 20px;
             border-radius: 10px;
             text-align: center;
-            max-width: 400px;
+            max-width: 300px; /* Reduced from 400px */
             width: 90%;
             color: white;
             border: 2px solid rgba(255, 255, 255, 0.2);
@@ -120,7 +120,7 @@
         }
 
         input {
-            width: 100%;
+            width: calc(100% - 20px); /* Adjusted width accounting for padding */
             padding: 10px;
             margin: 10px 0;
             border: 1px solid #10b981;
@@ -128,6 +128,8 @@
             text-align: center;
             background: rgba(255, 255, 255, 0.9);
             color: #065f46;
+            box-sizing: border-box; /* Include padding in width calculation */
+            font-size: 14px; /* Slightly smaller font size */
         }
 
         button {
@@ -185,7 +187,7 @@
             </div>
         </div>
 
-        <h1 class="title">MEOWMEOW UWU</h1>
+        <h1 class="title">Black Friday Sale Homepage LOL JK</h1>
         
         <div class="calendar-grid" id="calendarGrid"></div>
         
@@ -196,82 +198,4 @@
         var openedBoxes = new Set();
 
         function checkPassword() {
-            var password = document.getElementById('passwordInput').value;
-            var errorContainer = document.getElementById('errorContainer');
-            
-            if (password === 'ILOVESPY') {
-                document.getElementById('loginOverlay').style.display = 'none';
-                errorContainer.style.display = 'none';
-            } else {
-                errorContainer.style.display = 'block';
-                document.getElementById('passwordInput').value = '';
-            }
-        }
-
-        function createSparkles(element) {
-            for (var i = 0; i < 5; i++) {
-                var sparkle = document.createElement('div');
-                sparkle.className = 'sparkle';
-                sparkle.style.left = Math.random() * 100 + '%';
-                sparkle.style.top = Math.random() * 100 + '%';
-                sparkle.style.animation = 'sparkle 0.8s ease-in-out';
-                sparkle.style.animationDelay = (i * 0.1) + 's';
-                element.appendChild(sparkle);
-                setTimeout(function() {
-                    sparkle.remove();
-                }, 1000);
-            }
-        }
-
-        function handleBoxClick(box, number) {
-            if (!openedBoxes.has(number)) {
-                openedBoxes.add(number);
-                
-                // Clear existing content
-                box.innerHTML = '';
-                
-                // Add number and gift emoji
-                var numberSpan = document.createElement('span');
-                numberSpan.textContent = number;
-                var giftEmoji = document.createElement('span');
-                giftEmoji.textContent = '🎁';
-                giftEmoji.className = 'gift-emoji';
-                
-                box.appendChild(numberSpan);
-                box.appendChild(giftEmoji);
-                
-                // Add classes for animations
-                box.className = 'calendar-box opened';
-                
-                // Create sparkle effect
-                createSparkles(box);
-            }
-        }
-
-        function createCalendar() {
-            var grid = document.getElementById('calendarGrid');
-            for (var i = 1; i <= 25; i++) {
-                var box = document.createElement('div');
-                box.className = 'calendar-box';
-                box.innerHTML = i;
-                (function(num) {
-                    box.onclick = function() {
-                        handleBoxClick(this, num);
-                    };
-                })(i);
-                grid.appendChild(box);
-            }
-        }
-
-        window.onload = function() {
-            createCalendar();
-        };
-
-        document.getElementById('passwordInput').onkeyup = function(event) {
-            if (event.key === 'Enter') {
-                checkPassword();
-            }
-        };
-    </script>
-</body>
-</html>
+            var password = document.get
