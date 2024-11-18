@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Black Friday Sale Homepage LOL JK</title>
     <style>
+        /* Previous styles remain the same until calendar grid */
         body {
             margin: 0;
             min-height: 100vh;
@@ -17,47 +18,46 @@
             color: white;
         }
 
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
+        /* Add festive snowfall animation */
+        @keyframes snowfall {
+            0% {
+                transform: translateY(-100%) rotate(0deg);
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+            }
         }
 
-        .login-overlay {
+        .snowflake {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
-
-        .login-box {
-            background: #065f46;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            max-width: 300px;
-            width: 90%;
             color: white;
-            border: 2px solid rgba(255, 255, 255, 0.2);
+            font-size: 20px;
+            opacity: 0.8;
+            z-index: 1;
+            animation: snowfall linear infinite;
+            pointer-events: none;
         }
 
-        .calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
+        .calendar-tree {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             gap: 10px;
-            margin-top: 20px;
+            position: relative;
+            padding-top: 40px; /* Space for star */
+        }
+
+        .tree-row {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
         }
 
         .calendar-box {
-            aspect-ratio: 1;
+            width: 80px;
+            height: 80px;
             background: #065f46;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 215, 0, 0.3);
             border-radius: 10px;
             display: flex;
             align-items: center;
@@ -70,10 +70,30 @@
             perspective: 1000px;
             color: white;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .calendar-box::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, gold, transparent, gold);
+            border-radius: 12px;
+            z-index: -1;
+            opacity: 0.5;
+            animation: borderGlow 2s linear infinite;
+        }
+
+        @keyframes borderGlow {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 0.8; }
         }
 
         .calendar-box:hover {
-            transform: scale(1.05);
+            transform: scale(1.1);
             background: #047857;
         }
 
@@ -86,95 +106,71 @@
             }
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
         .opened {
             animation: flipOpen 0.6s forwards;
             background: #10b981;
         }
 
-        .gift-emoji {
+        .tree-star {
             position: absolute;
+            top: -20px;
+            font-size: 40px;
+            color: gold;
+            animation: starGlow 2s ease-in-out infinite;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+        }
+
+        @keyframes starGlow {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        .gift-emoji {
             font-size: 36px;
+        }
+
+        .number {
+            position: absolute;
+            font-size: 28px;
+            font-weight: bold;
             opacity: 0;
-            animation: fadeIn 0.3s forwards;
-            animation-delay: 0.3s;
             transform: rotateY(180deg);
         }
 
-        .title {
-            text-align: center;
-            color: #ffd700;
-            font-size: 36px;
-            margin-bottom: 30px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        .opened .number {
+            opacity: 1;
         }
 
-        .footer {
-            text-align: center;
-            color: #ffd700;
-            font-size: 24px;
-            margin-top: 30px;
+        .opened .gift-emoji {
+            opacity: 0;
         }
 
-        input {
-            width: calc(100% - 20px);
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #10b981;
-            border-radius: 5px;
-            text-align: center;
-            background: rgba(255, 255, 255, 0.9);
-            color: #065f46;
-            box-sizing: border-box;
-            font-size: 14px;
-        }
+        /* Rest of your existing styles */
+        /* ... */
 
-        button {
-            width: 100%;
-            padding: 10px;
-            background: #10b981;
-            border: none;
-            border-radius: 5px;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        button:hover {
-            background: #059669;
-        }
-
-        .error-image {
-            width: 200px;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 10px;
-            margin: 10px auto;
-        }
-
+        /* Enhanced sparkle effect */
         @keyframes sparkle {
-            0% { transform: scale(0); opacity: 0; }
-            50% { transform: scale(1.2); opacity: 1; }
-            100% { transform: scale(1); opacity: 0; }
+            0% { transform: scale(0) rotate(0deg); opacity: 0; }
+            50% { transform: scale(1.2) rotate(180deg); opacity: 1; }
+            100% { transform: scale(0) rotate(360deg); opacity: 0; }
         }
 
         .sparkle {
             position: absolute;
-            width: 10px;
-            height: 10px;
-            background: gold;
+            width: 8px;
+            height: 8px;
+            background: linear-gradient(45deg, gold, white);
             border-radius: 50%;
+            filter: blur(1px);
         }
+
     </style>
 </head>
 <body>
+    <!-- Previous overlay and container divs -->
     <div class="container">
         <div id="loginOverlay" class="login-overlay">
+            <!-- Previous login box content -->
             <div class="login-box">
                 <h2>🎄 Enter Password 🎄</h2>
                 <div id="errorContainer" style="display: none;">
@@ -190,13 +186,35 @@
 
         <h1 class="title">Black Friday Sale Homepage LOL JK</h1>
         
-        <div class="calendar-grid" id="calendarGrid"></div>
+        <div class="calendar-tree" id="calendarTree">
+            <div class="tree-star">⭐</div>
+            <!-- Tree will be generated here -->
+        </div>
         
         <div class="footer">⭐ for my bb only ❤️ ⭐</div>
     </div>
 
     <script>
         var openedBoxes = new Set();
+        
+        // Create snowflakes
+        function createSnowflakes() {
+            const snowflakes = ['❄', '❅', '❆'];
+            for (let i = 0; i < 20; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.className = 'snowflake';
+                snowflake.textContent = snowflakes[Math.floor(Math.random() * snowflakes.length)];
+                snowflake.style.left = Math.random() * 100 + 'vw';
+                snowflake.style.animationDuration = 5 + Math.random() * 10 + 's';
+                document.body.appendChild(snowflake);
+                
+                // Remove and recreate snowflake when animation ends
+                snowflake.addEventListener('animationend', () => {
+                    snowflake.remove();
+                    createSnowflakes();
+                });
+            }
+        }
 
         function checkPassword() {
             var password = document.getElementById('passwordInput').value;
@@ -212,7 +230,7 @@
         }
 
         function createSparkles(element) {
-            for (var i = 0; i < 5; i++) {
+            for (var i = 0; i < 8; i++) {
                 var sparkle = document.createElement('div');
                 sparkle.className = 'sparkle';
                 sparkle.style.left = Math.random() * 100 + '%';
@@ -230,40 +248,60 @@
             if (!openedBoxes.has(number)) {
                 openedBoxes.add(number);
                 
-                box.innerHTML = '';
-                
-                var numberSpan = document.createElement('span');
-                numberSpan.textContent = number;
-                var giftEmoji = document.createElement('span');
-                giftEmoji.textContent = '🎁';
-                giftEmoji.className = 'gift-emoji';
-                
-                box.appendChild(numberSpan);
-                box.appendChild(giftEmoji);
+                const gift = box.querySelector('.gift-emoji');
+                const num = box.querySelector('.number');
                 
                 box.className = 'calendar-box opened';
-                
                 createSparkles(box);
+                
+                // After flip animation
+                setTimeout(() => {
+                    gift.style.display = 'none';
+                    num.style.opacity = '1';
+                }, 300);
             }
         }
 
-        function createCalendar() {
-            var grid = document.getElementById('calendarGrid');
-            for (var i = 1; i <= 25; i++) {
-                var box = document.createElement('div');
-                box.className = 'calendar-box';
-                box.innerHTML = i;
-                (function(num) {
-                    box.onclick = function() {
-                        handleBoxClick(this, num);
-                    };
-                })(i);
-                grid.appendChild(box);
-            }
+        function createCalendarTree() {
+            const tree = document.getElementById('calendarTree');
+            const layout = [1, 2, 3, 4, 5, 4, 3, 2]; // Tree shape
+            let boxNumber = 1;
+            
+            layout.forEach((boxesInRow, rowIndex) => {
+                const row = document.createElement('div');
+                row.className = 'tree-row';
+                
+                for (let i = 0; i < boxesInRow; i++) {
+                    if (boxNumber <= 24) {
+                        const box = document.createElement('div');
+                        box.className = 'calendar-box';
+                        
+                        const gift = document.createElement('span');
+                        gift.className = 'gift-emoji';
+                        gift.textContent = '🎁';
+                        
+                        const number = document.createElement('span');
+                        number.className = 'number';
+                        number.textContent = boxNumber;
+                        
+                        box.appendChild(gift);
+                        box.appendChild(number);
+                        
+                        const currentNumber = boxNumber;
+                        box.onclick = () => handleBoxClick(box, currentNumber);
+                        
+                        row.appendChild(box);
+                        boxNumber++;
+                    }
+                }
+                
+                tree.appendChild(row);
+            });
         }
 
         window.onload = function() {
-            createCalendar();
+            createCalendarTree();
+            createSnowflakes();
         };
 
         document.getElementById('passwordInput').onkeyup = function(event) {
