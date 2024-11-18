@@ -135,6 +135,142 @@
                 checkPassword();
             }
         };
+    <div class="container">
+        <div id="loginOverlay" class="login-overlay">
+            <div class="login-box">
+                <h2>🎄 Enter Password 🎄</h2>
+                <div id="errorContainer" style="display: none;">
+                    <img src="https://media.tenor.com/kHcmsxlKHEAAAAAM/rock-one-eyebrow-raised-rock-staring.gif" 
+                         alt="Suspicious Rock" 
+                         class="error-image">
+                    <p style="font-size: 40px;">🤨</p>
+                </div>
+                <input type="password" id="passwordInput" placeholder="Password">
+                <button onclick="checkPassword()">Unlock Calendar</button>
+            </div>
+        </div>
+
+        <h1 class="title">Black Friday Sale Homepage LOL JK</h1>
+        
+        <div class="calendar-tree" id="calendarTree">
+            <div class="tree-star">⭐</div>
+        </div>
+        
+        <div class="footer">⭐ for my bb only ❤️ ⭐</div>
+    </div>
+
+    <script>
+        var openedBoxes = new Set();
+        
+        function createSnowflakes() {
+            const snowflakes = ['❄', '❅', '❆'];
+            for (let i = 0; i < 20; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.className = 'snowflake';
+                snowflake.textContent = snowflakes[Math.floor(Math.random() * snowflakes.length)];
+                snowflake.style.left = Math.random() * 100 + 'vw';
+                snowflake.style.animationDuration = 5 + Math.random() * 10 + 's';
+                document.body.appendChild(snowflake);
+                
+                snowflake.addEventListener('animationend', () => {
+                    snowflake.remove();
+                    createSnowflakes();
+                });
+            }
+        }
+
+        function checkPassword() {
+            var password = document.getElementById('passwordInput').value;
+            var errorContainer = document.getElementById('errorContainer');
+            
+            if (password.toLowerCase() === 'cowboy') {
+                document.getElementById('loginOverlay').style.display = 'none';
+                errorContainer.style.display = 'none';
+            } else {
+                errorContainer.style.display = 'block';
+                document.getElementById('passwordInput').value = '';
+            }
+        }
+
+        function createSparkles(element) {
+            for (var i = 0; i < 8; i++) {
+                var sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                sparkle.style.left = Math.random() * 100 + '%';
+                sparkle.style.top = Math.random() * 100 + '%';
+                sparkle.style.animation = 'sparkle 0.8s ease-in-out';
+                sparkle.style.animationDelay = (i * 0.1) + 's';
+                element.appendChild(sparkle);
+                setTimeout(function() {
+                    sparkle.remove();
+                }, 1000);
+            }
+        }
+
+        function handleBoxClick(box, number) {
+            if (!openedBoxes.has(number)) {
+                openedBoxes.add(number);
+                
+                const gift = box.querySelector('.gift-emoji');
+                const num = box.querySelector('.number');
+                
+                box.className = 'calendar-box opened';
+                createSparkles(box);
+                
+                setTimeout(() => {
+                    gift.style.display = 'none';
+                    num.style.opacity = '1';
+                }, 300);
+            }
+        }
+
+        function createCalendarTree() {
+            const tree = document.getElementById('calendarTree');
+            const layout = [1, 2, 3, 4, 5, 4, 3, 2];
+            let boxNumber = 1;
+            
+            layout.forEach((boxesInRow, rowIndex) => {
+                const row = document.createElement('div');
+                row.className = 'tree-row';
+                
+                for (let i = 0; i < boxesInRow; i++) {
+                    if (boxNumber <= 24) {
+                        const box = document.createElement('div');
+                        box.className = 'calendar-box';
+                        
+                        const gift = document.createElement('span');
+                        gift.className = 'gift-emoji';
+                        gift.textContent = '🎁';
+                        
+                        const number = document.createElement('span');
+                        number.className = 'number';
+                        number.textContent = boxNumber;
+                        
+                        box.appendChild(gift);
+                        box.appendChild(number);
+                        
+                        const currentNumber = boxNumber;
+                        box.onclick = () => handleBoxClick(box, currentNumber);
+                        
+                        row.appendChild(box);
+                        boxNumber++;
+                    }
+                }
+                
+                tree.appendChild(row);
+            });
+        }
+
+        window.onload = function() {
+            createCalendarTree();
+            createSnowflakes();
+        };
+
+        document.getElementById('passwordInput').onkeyup = function(event) {
+            if (event.key === 'Enter') {
+                checkPassword();
+            }
+        };
     </script>
 </body>
 </html>
