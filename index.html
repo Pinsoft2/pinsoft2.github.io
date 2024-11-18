@@ -41,7 +41,7 @@
             padding: 20px;
             border-radius: 10px;
             text-align: center;
-            max-width: 300px; /* Reduced from 400px */
+            max-width: 300px;
             width: 90%;
             color: white;
             border: 2px solid rgba(255, 255, 255, 0.2);
@@ -56,8 +56,7 @@
 
         .calendar-box {
             aspect-ratio: 1;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(5px);
+            background: #065f46;
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 10px;
             display: flex;
@@ -69,11 +68,13 @@
             position: relative;
             transform-style: preserve-3d;
             perspective: 1000px;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
         }
 
         .calendar-box:hover {
             transform: scale(1.05);
-            background: rgba(255, 255, 255, 0.2);
+            background: #047857;
         }
 
         @keyframes flipOpen {
@@ -92,7 +93,7 @@
 
         .opened {
             animation: flipOpen 0.6s forwards;
-            background: rgba(255, 215, 0, 0.3);
+            background: #10b981;
         }
 
         .gift-emoji {
@@ -120,7 +121,7 @@
         }
 
         input {
-            width: calc(100% - 20px); /* Adjusted width accounting for padding */
+            width: calc(100% - 20px);
             padding: 10px;
             margin: 10px 0;
             border: 1px solid #10b981;
@@ -128,8 +129,8 @@
             text-align: center;
             background: rgba(255, 255, 255, 0.9);
             color: #065f46;
-            box-sizing: border-box; /* Include padding in width calculation */
-            font-size: 14px; /* Slightly smaller font size */
+            box-sizing: border-box;
+            font-size: 14px;
         }
 
         button {
@@ -198,4 +199,78 @@
         var openedBoxes = new Set();
 
         function checkPassword() {
-            var password = document.get
+            var password = document.getElementById('passwordInput').value;
+            var errorContainer = document.getElementById('errorContainer');
+            
+            if (password.toLowerCase() === 'cowboy') {
+                document.getElementById('loginOverlay').style.display = 'none';
+                errorContainer.style.display = 'none';
+            } else {
+                errorContainer.style.display = 'block';
+                document.getElementById('passwordInput').value = '';
+            }
+        }
+
+        function createSparkles(element) {
+            for (var i = 0; i < 5; i++) {
+                var sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                sparkle.style.left = Math.random() * 100 + '%';
+                sparkle.style.top = Math.random() * 100 + '%';
+                sparkle.style.animation = 'sparkle 0.8s ease-in-out';
+                sparkle.style.animationDelay = (i * 0.1) + 's';
+                element.appendChild(sparkle);
+                setTimeout(function() {
+                    sparkle.remove();
+                }, 1000);
+            }
+        }
+
+        function handleBoxClick(box, number) {
+            if (!openedBoxes.has(number)) {
+                openedBoxes.add(number);
+                
+                box.innerHTML = '';
+                
+                var numberSpan = document.createElement('span');
+                numberSpan.textContent = number;
+                var giftEmoji = document.createElement('span');
+                giftEmoji.textContent = '🎁';
+                giftEmoji.className = 'gift-emoji';
+                
+                box.appendChild(numberSpan);
+                box.appendChild(giftEmoji);
+                
+                box.className = 'calendar-box opened';
+                
+                createSparkles(box);
+            }
+        }
+
+        function createCalendar() {
+            var grid = document.getElementById('calendarGrid');
+            for (var i = 1; i <= 25; i++) {
+                var box = document.createElement('div');
+                box.className = 'calendar-box';
+                box.innerHTML = i;
+                (function(num) {
+                    box.onclick = function() {
+                        handleBoxClick(this, num);
+                    };
+                })(i);
+                grid.appendChild(box);
+            }
+        }
+
+        window.onload = function() {
+            createCalendar();
+        };
+
+        document.getElementById('passwordInput').onkeyup = function(event) {
+            if (event.key === 'Enter') {
+                checkPassword();
+            }
+        };
+    </script>
+</body>
+</html>
