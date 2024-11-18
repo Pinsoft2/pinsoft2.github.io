@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Black Friday Sale Homegoods JK gotchuu</title>
+    <title>MEOWMEOW UWU</title>
     <style>
         body {
             margin: 0;
@@ -37,12 +37,14 @@
         }
 
         .login-box {
-            background: white;
+            background: #065f46;
             padding: 20px;
             border-radius: 10px;
             text-align: center;
             max-width: 400px;
             width: 90%;
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.2);
         }
 
         .calendar-grid {
@@ -64,6 +66,9 @@
             font-size: 24px;
             cursor: pointer;
             transition: all 0.3s ease;
+            position: relative;
+            transform-style: preserve-3d;
+            perspective: 1000px;
         }
 
         .calendar-box:hover {
@@ -71,8 +76,32 @@
             background: rgba(255, 255, 255, 0.2);
         }
 
+        @keyframes flipOpen {
+            0% {
+                transform: rotateY(0deg);
+            }
+            100% {
+                transform: rotateY(180deg);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
         .opened {
+            animation: flipOpen 0.6s forwards;
             background: rgba(255, 215, 0, 0.3);
+        }
+
+        .gift-emoji {
+            position: absolute;
+            font-size: 36px;
+            opacity: 0;
+            animation: fadeIn 0.3s forwards;
+            animation-delay: 0.3s;
+            transform: rotateY(180deg);
         }
 
         .title {
@@ -94,24 +123,27 @@
             width: 100%;
             padding: 10px;
             margin: 10px 0;
-            border: 1px solid #ccc;
+            border: 1px solid #10b981;
             border-radius: 5px;
             text-align: center;
+            background: rgba(255, 255, 255, 0.9);
+            color: #065f46;
         }
 
         button {
             width: 100%;
             padding: 10px;
-            background: #ffd700;
+            background: #10b981;
             border: none;
             border-radius: 5px;
-            color: black;
+            color: white;
             font-size: 16px;
             cursor: pointer;
+            transition: background-color 0.3s ease;
         }
 
         button:hover {
-            background: #ffed4a;
+            background: #059669;
         }
 
         .error-image {
@@ -120,6 +152,20 @@
             object-fit: cover;
             border-radius: 10px;
             margin: 10px auto;
+        }
+
+        @keyframes sparkle {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(1); opacity: 0; }
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: gold;
+            border-radius: 50%;
         }
     </style>
 </head>
@@ -153,7 +199,7 @@
             var password = document.getElementById('passwordInput').value;
             var errorContainer = document.getElementById('errorContainer');
             
-            if (password === 'SPY') {
+            if (password === 'ILOVESPY') {
                 document.getElementById('loginOverlay').style.display = 'none';
                 errorContainer.style.display = 'none';
             } else {
@@ -162,11 +208,43 @@
             }
         }
 
+        function createSparkles(element) {
+            for (var i = 0; i < 5; i++) {
+                var sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                sparkle.style.left = Math.random() * 100 + '%';
+                sparkle.style.top = Math.random() * 100 + '%';
+                sparkle.style.animation = 'sparkle 0.8s ease-in-out';
+                sparkle.style.animationDelay = (i * 0.1) + 's';
+                element.appendChild(sparkle);
+                setTimeout(function() {
+                    sparkle.remove();
+                }, 1000);
+            }
+        }
+
         function handleBoxClick(box, number) {
             if (!openedBoxes.has(number)) {
-                box.className = 'calendar-box opened';
-                box.innerHTML = '🎁';
                 openedBoxes.add(number);
+                
+                // Clear existing content
+                box.innerHTML = '';
+                
+                // Add number and gift emoji
+                var numberSpan = document.createElement('span');
+                numberSpan.textContent = number;
+                var giftEmoji = document.createElement('span');
+                giftEmoji.textContent = '🎁';
+                giftEmoji.className = 'gift-emoji';
+                
+                box.appendChild(numberSpan);
+                box.appendChild(giftEmoji);
+                
+                // Add classes for animations
+                box.className = 'calendar-box opened';
+                
+                // Create sparkle effect
+                createSparkles(box);
             }
         }
 
