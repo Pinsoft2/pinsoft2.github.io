@@ -6,7 +6,6 @@
     <title>Black Friday Sale Homepage LOL JK</title>
     <link href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&display=swap" rel="stylesheet">
     <style>
-        /* Previous styles remain the same until .title */
         body {
             margin: 0;
             min-height: 100vh;
@@ -20,34 +19,68 @@
             overflow-x: hidden;
         }
 
-        /* Previous styles remain... */
-
-        .title-container {
-            position: relative;
-            text-align: center;
-            margin-bottom: 30px;
-            min-height: 60px;
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
         }
 
-        .title {
+        /* Login Styles */
+        #loginOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .login-box {
+            background: #065f46;
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
             text-align: center;
+        }
+
+        .login-box input {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .login-box button {
+            width: 90%;
+            padding: 10px;
+            background: #10b981;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .error-image {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin: 10px auto;
+        }
+
+        /* Title Styles */
+        .title {
             font-family: 'Bubblegum Sans', cursive;
             font-size: 42px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            margin-bottom: 30px;
             animation: rainbow 4s linear infinite, bounce 3s ease-in-out infinite;
             white-space: nowrap;
-            display: inline-block;
-            position: relative;
-        }
-
-        .title-sparkle {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: white;
-            border-radius: 50%;
-            pointer-events: none;
-            opacity: 0;
         }
 
         @keyframes rainbow {
@@ -65,29 +98,90 @@
             50% { transform: translateX(20px); }
         }
 
-        @keyframes titleSparkle {
-            0% { 
-                transform: scale(0) rotate(0deg); 
-                opacity: 0; 
-            }
-            50% { 
-                transform: scale(1.5) rotate(180deg); 
-                opacity: 1; 
-            }
-            100% { 
-                transform: scale(0) rotate(360deg); 
-                opacity: 0; 
-            }
+        /* Tree Styles */
+        .calendar-tree {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            padding-top: 40px;
         }
 
-        /* Previous styles remain... */
+        .tree-star {
+            position: absolute;
+            top: -20px;
+            font-size: 40px;
+            color: gold;
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        .tree-row {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .calendar-box {
+            width: 80px;
+            height: 80px;
+            background: #065f46;
+            border: 2px solid gold;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            transform-style: preserve-3d;
+        }
+
+        .calendar-box:hover {
+            transform: scale(1.1);
+            background: #047857;
+        }
+
+        .gift-emoji {
+            font-size: 36px;
+        }
+
+        .number {
+            position: absolute;
+            font-size: 28px;
+            font-weight: bold;
+            opacity: 0;
+        }
+
+        .opened {
+            background: #10b981;
+        }
+
+        .opened .gift-emoji {
+            display: none;
+        }
+
+        .opened .number {
+            opacity: 1;
+        }
+
+        .footer {
+            text-align: center;
+            color: gold;
+            font-size: 24px;
+            margin-top: 30px;
+        }
+
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 10px gold; }
+            50% { text-shadow: 0 0 20px gold, 0 0 30px gold; }
+        }
     </style>
-    <!-- Previous styles remain the same -->
 </head>
 <body>
     <div class="container">
-        <!-- Login overlay remains the same -->
-        <div id="loginOverlay" class="login-overlay">
+        <div id="loginOverlay">
             <div class="login-box">
                 <h2>🎄 Enter Password 🎄</h2>
                 <div id="errorContainer" style="display: none;">
@@ -101,47 +195,50 @@
             </div>
         </div>
 
-        <div class="title-container">
-            <h1 class="title" id="sparklyTitle">Black Friday Sale Homepage LOL JK</h1>
-        </div>
+        <h1 class="title">Black Friday Sale Homepage LOL JK</h1>
         
-        <div class="calendar-tree" id="calendarTree">
+        <div class="calendar-tree">
             <div class="tree-star">⭐</div>
+            <div id="treeContent"></div>
         </div>
         
         <div class="footer">⭐ for my bb only ❤️ ⭐</div>
     </div>
 
     <script>
-        // Previous script remains the same until createTitleSparkles
+        // Initialize
+        var openedBoxes = new Set();
 
-        function createTitleSparkles() {
-            const title = document.getElementById('sparklyTitle');
-            setInterval(() => {
-                const sparkle = document.createElement('div');
-                sparkle.className = 'title-sparkle';
-                
-                // Random position around the title
-                const top = -20 + Math.random() * 60; // pixels above/below
-                const left = Math.random() * 100; // percent across
-                
-                sparkle.style.top = `${top}px`;
-                sparkle.style.left = `${left}%`;
-                sparkle.style.animation = 'titleSparkle 1s ease-out forwards';
-                
-                title.appendChild(sparkle);
-                
-                // Remove sparkle after animation
-                setTimeout(() => sparkle.remove(), 1000);
-            }, 100); // Create new sparkle every 100ms
+        function checkPassword() {
+            var password = document.getElementById('passwordInput').value;
+            var errorContainer = document.getElementById('errorContainer');
+            
+            if (password.toLowerCase() === 'cowboy') {
+                document.getElementById('loginOverlay').style.display = 'none';
+                errorContainer.style.display = 'none';
+            } else {
+                errorContainer.style.display = 'block';
+                document.getElementById('passwordInput').value = '';
+            }
+        }
+
+        function handleBoxClick(box, number) {
+            if (!openedBoxes.has(number)) {
+                openedBoxes.add(number);
+                box.classList.add('opened');
+                const gift = box.querySelector('.gift-emoji');
+                const num = box.querySelector('.number');
+                gift.style.display = 'none';
+                num.style.opacity = '1';
+            }
         }
 
         function createCalendarTree() {
-            const tree = document.getElementById('calendarTree');
+            const treeContent = document.getElementById('treeContent');
             const layout = [1, 2, 3, 4, 5, 4, 3, 2];
             let numbers = Array.from({length: 24}, (_, i) => i + 1);
             
-            // Shuffle the numbers
+            // Shuffle numbers
             for (let i = numbers.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [numbers[i], numbers[j]] = [numbers[j], numbers[i]];
@@ -149,7 +246,7 @@
             
             let numberIndex = 0;
             
-            layout.forEach((boxesInRow, rowIndex) => {
+            layout.forEach((boxesInRow) => {
                 const row = document.createElement('div');
                 row.className = 'tree-row';
                 
@@ -177,19 +274,21 @@
                     }
                 }
                 
-                tree.appendChild(row);
+                treeContent.appendChild(row);
             });
         }
 
-        // Previous functions remain the same
-
+        // Initialize everything when the page loads
         window.onload = function() {
             createCalendarTree();
-            createSnowflakes();
-            createTitleSparkles();
         };
 
-        // Previous event listeners remain the same
+        // Handle Enter key for password
+        document.getElementById('passwordInput').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                checkPassword();
+            }
+        });
     </script>
 </body>
 </html>
