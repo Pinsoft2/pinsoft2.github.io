@@ -12,6 +12,7 @@
             background: #f0f8ff;
             font-family: Arial, sans-serif;
             color: #333;
+            padding-bottom: 100px; /* Space for fixed control panel */
         }
 
         .container {
@@ -40,7 +41,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 20px;
+            gap: min(4vh, 25px);
             padding-top: 40px;
             position: relative;
         }
@@ -58,11 +59,6 @@
             padding: 15px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             text-align: center;
-            transition: transform 0.3s ease;
-        }
-
-        .box-config:hover {
-            transform: translateY(-5px);
         }
 
         .box-config.regular {
@@ -71,10 +67,30 @@
         }
 
         .box-config.trunk {
-            background: linear-gradient(to bottom, #8B4513, #A0522D);
+            background: linear-gradient(to bottom, #3E1D0B, #2B140A);
             color: white;
-            height: 200px;
+            width: 200px; /* Wider trunk */
+            height: 250px; /* Taller trunk */
             margin-top: 20px;
+            position: relative;
+        }
+
+        .box-config.trunk::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: repeating-linear-gradient(
+                45deg,
+                rgba(43, 20, 10, 0.6) 0px,
+                rgba(43, 20, 10, 0.6) 2px,
+                transparent 2px,
+                transparent 4px
+            );
+            border-radius: 10px;
+            pointer-events: none;
         }
 
         .preview-area {
@@ -86,6 +102,7 @@
             overflow: hidden;
             position: relative;
             cursor: pointer;
+            background: rgba(255,255,255,0.1);
         }
 
         .preview-area img {
@@ -103,7 +120,8 @@
         }
 
         .trunk .preview-area {
-            height: 150px;
+            height: 180px;
+            margin-top: 20px;
         }
 
         .control-panel {
@@ -199,16 +217,18 @@
         // Create configuration grid
         function createConfigGrid() {
             const grid = document.getElementById('configGrid');
-            const layout = [1, 3, 5, 7, 9]; // Tree shape
+            const layout = [1, 3, 4, 5, 6]; // New tree shape
             let boxNumber = 1;
 
             layout.forEach(boxCount => {
                 const row = document.createElement('div');
                 row.className = 'grid-row';
                 
-                for (let i = 0; i < boxCount && boxNumber <= 24; i++) {
-                    row.appendChild(createConfigBox(boxNumber));
-                    boxNumber++;
+                for (let i = 0; i < boxCount; i++) {
+                    if (boxNumber <= 19) { // Regular boxes
+                        row.appendChild(createConfigBox(boxNumber));
+                        boxNumber++;
+                    }
                 }
                 
                 grid.appendChild(row);
@@ -217,7 +237,7 @@
             // Add trunk
             const trunkRow = document.createElement('div');
             trunkRow.className = 'grid-row';
-            trunkRow.appendChild(createConfigBox(25, true));
+            trunkRow.appendChild(createConfigBox(20, true)); // Trunk is box 20
             grid.appendChild(trunkRow);
         }
 
@@ -227,7 +247,7 @@
             box.className = `box-config ${isTrunk ? 'trunk' : 'regular'}`;
             
             const title = document.createElement('div');
-            title.textContent = isTrunk ? 'Trunk Box (25)' : `Box ${number}`;
+            title.textContent = isTrunk ? 'Trunk Box (20)' : `Box ${number}`;
             box.appendChild(title);
 
             const preview = document.createElement('div');
@@ -258,7 +278,7 @@
             if (!file) return;
 
             try {
-                // Convert to base64 for localStorage (temporary solution)
+                // Convert to base64 for localStorage
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     const imageUrl = e.target.result;
