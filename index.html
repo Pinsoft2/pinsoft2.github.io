@@ -105,22 +105,22 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: min(4vh, 25px); /* Responsive gap */
+            gap: min(3vh, 20px); /* Reduced gap for larger boxes */
             position: relative;
             padding-top: 40px;
             flex: 1;
-            justify-content: space-evenly; /* Even spacing */
+            justify-content: space-evenly;
         }
 
         .tree-row {
             display: flex;
-            gap: 15px;
+            gap: 20px; /* Increased gap for larger boxes */
             justify-content: center;
         }
 
         .calendar-box {
-            width: 70px; /* Smaller boxes */
-            height: 70px;
+            width: 90px; /* Larger boxes */
+            height: 90px;
             background: #065f46;
             border: 2px solid rgba(255, 215, 0, 0.3);
             border-radius: 10px;
@@ -139,15 +139,13 @@
         }
 
         .tree-trunk {
-            width: 160px; /* Wider trunk */
-            height: 200px; /* Taller trunk */
-            background: linear-gradient(to bottom, #3E1D0B, #2B140A); /* Darker brown */
+            width: 128px; /* 20% slimmer */
+            height: 200px; /* Unchanged height */
+            background: linear-gradient(to bottom, #3E1D0B, #2B140A);
             border-radius: 8px;
-            margin-top: 10px;
+            margin-top: 5px; /* Closer to last row */
             position: relative;
-            cursor: pointer;
-            transform-style: preserve-3d;
-            perspective: 1000px;
+            cursor: default; /* Regular cursor */
         }
 
         .tree-trunk::before {
@@ -266,17 +264,15 @@
             const calendar = document.getElementById('calendar');
             const configs = loadConfigurations();
             
-            // New tree shape layout [1,3,4,5,6]
             const layout = [1, 3, 4, 5, 6];
             let boxNumber = 1;
 
-            // Create tree boxes
             layout.forEach(boxCount => {
                 const row = document.createElement('div');
                 row.className = 'tree-row';
                 
                 for (let i = 0; i < boxCount; i++) {
-                    if (boxNumber <= 19) { // Total boxes excluding trunk
+                    if (boxNumber <= 19) {
                         const box = createBox(boxNumber, configs[boxNumber]);
                         row.appendChild(box);
                         boxNumber++;
@@ -286,7 +282,6 @@
                 calendar.appendChild(row);
             });
 
-            // Create trunk (without gift emoji)
             const trunkRow = document.createElement('div');
             trunkRow.className = 'tree-row';
             const trunk = createTrunk(configs[20]);
@@ -316,7 +311,6 @@
         function createTrunk(config) {
             const trunk = document.createElement('div');
             trunk.className = 'tree-trunk';
-            trunk.innerHTML = `<div class="number" style="opacity: 1; color: rgba(255,255,255,0.3)">20</div>`;
             
             if (config && config.image) {
                 const img = document.createElement('img');
@@ -335,7 +329,8 @@
                 setTimeout(() => {
                     const gift = element.querySelector('.gift-emoji');
                     if (gift) gift.style.display = 'none';
-                    element.querySelector('.number').style.opacity = '1';
+                    const num = element.querySelector('.number');
+                    if (num) num.style.opacity = '1';
                     const img = element.querySelector('.box-image');
                     if (img) img.style.opacity = '1';
                 }, 300);
