@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Black Friday Sale Homepage LOL JK</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&display=swap" rel="stylesheet">
+    <style>
+        /* ... Previous styles remain ... */
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
+                            url('https://images.squarespace-cdn.com/content/v1/6029be12fff66b0cea7cc683/1e404cc4-cf27-4a58-a1bf-1af6ebd5f32d/OChristmasTree2.jpeg?format=1500w');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            font-family: Arial, sans-serif;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        #loginOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .login-box {
+            background: #065f46;
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        /* Previous styles for calendar boxes */
+        .calendar-tree {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            position: relative;
+            padding-top: 40px;
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Regular box styles */
+        .calendar-box {
+            width: 100px;
+            height: 100px;
+            background: #065f46;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        /* Trunk specific styles */
+        .tree-trunk {
+            width: 120px;
+            height: 240px;
+            background: linear-gradient(to bottom, #8B4513, #A0522D);
+            border-radius: 8px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tree-trunk::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: repeating-linear-gradient(
+                45deg,
+                rgba(139, 69, 19, 0.1) 0px,
+                rgba(139, 69, 19, 0.1) 2px,
+                transparent 2px,
+                transparent 4px
+            );
+        }
+
+        /* ... Rest of the previous styles ... */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="loginOverlay">
+            <div class="login-box">
+                <h2>🎄 Enter Password 🎄</h2>
+                <div id="errorContainer" style="display: none;">
+                    <img src="https://media.tenor.com/kHcmsxlKHEAAAAAM/rock-one-eyebrow-raised-rock-staring.gif" 
+                         alt="Suspicious Rock" 
+                         class="error-image">
+                    <p style="font-size: 40px;">🤨</p>
+                </div>
+                <input type="password" id="passwordInput" placeholder="Password">
+                <button onclick="checkPassword()">Enter</button>
+            </div>
+        </div>
+
+        <h1 class="title">Black Friday Sale Homepage LOL JK</h1>
+        
+        <div id="calendar" class="calendar-tree">
+            <!-- Calendar content will be generated here -->
+        </div>
+    </div>
+
+    <script>
+        // Configuration and state
+        const config = {
+            boxCount: 22,  // Regular boxes
+            storagePath: 'images/' // GitHub images folder path
+        };
+
+        // Load saved configurations
+        function loadConfigurations() {
+            const savedConfig = localStorage.getItem('calendarConfig');
+            return savedConfig ? JSON.parse(savedConfig) : {};
+        }
+
+        // Password handling
+        function checkPassword() {
+            const password = document.getElementById('passwordInput').value;
+            if (password === 'PP') {
+                window.location.href = 'admin.html';
+            } else if (password.toLowerCase() === 'cowboy') {
+                document.getElementById('loginOverlay').style.display = 'none';
+            } else {
+                document.getElementById('errorContainer').style.display = 'block';
+                document.getElementById('passwordInput').value = '';
+            }
+        }
+
+        // Create calendar structure
+        function createCalendar() {
+            const calendar = document.getElementById('calendar');
+            const configs = loadConfigurations();
+            
+            // Create tree shape layout
+            const layout = [1, 2, 3, 4, 5, 4, 3];
+            let boxNumber = 1;
+
+            // Create regular boxes
+            layout.forEach(boxCount => {
+                const row = document.createElement('div');
+                row.className = 'tree-row';
+                
+                for (let i = 0; i < boxCount && boxNumber <= config.boxCount; i++) {
+                    const box = createBox(boxNumber, configs[boxNumber]);
+                    row.appendChild(box);
+                    boxNumber++;
+                }
+                
+                calendar.appendChild(row);
+            });
+
+            // Create trunk
+            const trunkRow = document.createElement('div');
+            trunkRow.className = 'tree-row';
+            const trunk = createTrunk(configs[23]);
+            trunkRow.appendChild(trunk);
+            calendar.appendChild(trunkRow);
+        }
+
+        // Box creation helper
+        function createBox(number, config) {
+            const box = document.createElement('div');
+            box.className = 'calendar-box';
+            box.innerHTML = `
+                <div class="gift-emoji">🎁</div>
+                <div class="number" style="display: none;">${number}</div>
+            `;
+            
+            if (config && config.image) {
+                box.dataset.image = config.image;
+            }
+            
+            box.onclick = () => handleBoxClick(box, number);
+            return box;
+        }
+
+        // Trunk creation helper
+        function createTrunk(config) {
+            const trunk = document.createElement('div');
+            trunk.className = 'tree-trunk';
+            
+            if (config && config.image) {
+                trunk.dataset.image = config.image;
+            }
+            
+            trunk.onclick = () => handleBoxClick(trunk, 23);
+            return trunk;
+        }
+
+        // Box click handler
+        function handleBoxClick(element, number) {
+            if (!element.classList.contains('opened')) {
+                element.classList.add('opened');
+                
+                // Show content
+                const gift = element.querySelector('.gift-emoji');
+                const num = element.querySelector('.number');
+                if (gift) gift.style.display = 'none';
+                if (num) num.style.display = 'block';
+
+                // Show image if configured
+                if (element.dataset.image) {
+                    const img = document.createElement('img');
+                    img.src = element.dataset.image;
+                    img.className = 'box-image';
+                    element.appendChild(img);
+                }
+
+                createSparkles(element);
+            }
+        }
+
+        // Initialize
+        window.onload = createCalendar;
+    </script>
+</body>
+</html>
