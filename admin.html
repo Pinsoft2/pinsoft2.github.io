@@ -3,16 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calendar Admin Panel</title>
-    <link href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&display=swap" rel="stylesheet">
+    <title>Advent Calendar Admin</title>
     <style>
         body {
             margin: 0;
+            padding: 0;
             min-height: 100vh;
-            background: #f0f8ff;
+            background: linear-gradient(to bottom, #1a1a1a, #2d2d2d);
+            color: white;
             font-family: Arial, sans-serif;
-            color: #333;
-            padding-bottom: 100px;
         }
 
         .container {
@@ -24,296 +23,173 @@
         .header {
             text-align: center;
             margin-bottom: 40px;
-            padding: 20px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
         .title {
-            font-family: 'Bubblegum Sans', cursive;
-            font-size: 36px;
-            color: #065f46;
-            margin: 0;
+            color: #ff4444;
+        }
+
+        .github-config {
+            margin-bottom: 30px;
         }
 
         .calendar-grid {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: min(3vh, 20px);
-            padding-top: 40px;
-            position: relative;
-        }
-
-        .grid-row {
-            display: flex;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
             gap: 20px;
-            justify-content: center;
+            margin-bottom: 40px;
         }
 
-        .box-config {
-            width: 110px; /* Slightly wider than calendar boxes for better editing */
-            background: white;
-            border-radius: 10px;
+        .config-box {
+            background: rgba(255, 255, 255, 0.1);
             padding: 15px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-
-        .box-config.regular {
-            background: #065f46;
-            color: white;
-        }
-
-        .box-config.trunk {
-            background: linear-gradient(to bottom, #3E1D0B, #2B140A);
-            color: white;
-            width: 128px; /* Match main page trunk width */
-            height: 220px; /* Slightly taller for upload interface */
-            margin-top: 5px;
-            position: relative;
-            cursor: default;
-        }
-
-        .box-config.trunk::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-image: repeating-linear-gradient(
-                45deg,
-                rgba(43, 20, 10, 0.6) 0px,
-                rgba(43, 20, 10, 0.6) 2px,
-                transparent 2px,
-                transparent 4px
-            );
             border-radius: 10px;
-            pointer-events: none;
         }
 
-        .preview-area {
-            width: 100%;
-            height: 90px; /* Match calendar box size */
-            border: 2px dashed rgba(255,255,255,0.3);
-            border-radius: 8px;
-            margin: 10px 0;
-            overflow: hidden;
-            position: relative;
-            cursor: pointer;
-            background: rgba(255,255,255,0.1);
+        .config-box label {
+            display: block;
+            margin-bottom: 10px;
         }
 
-        .preview-area img {
+        .config-box input {
             width: 100%;
-            height: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .preview-image {
+            width: 100%;
+            height: 150px;
             object-fit: cover;
-        }
-
-        .preview-area.empty {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            color: rgba(255,255,255,0.7);
-        }
-
-        .trunk .preview-area {
-            height: 160px;
+            border-radius: 5px;
             margin-top: 10px;
         }
 
         .control-panel {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: white;
-            padding: 20px;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
             display: flex;
             justify-content: center;
             gap: 20px;
-            z-index: 100;
+            margin-top: 30px;
         }
 
         button {
-            padding: 12px 24px;
+            padding: 10px 20px;
+            border-radius: 5px;
             border: none;
-            border-radius: 8px;
             cursor: pointer;
-            font-size: 16px;
+            background: #ff4444;
+            color: white;
             font-weight: bold;
-            transition: all 0.3s ease;
-        }
-
-        .save-btn {
-            background: #065f46;
-            color: white;
-        }
-
-        .preview-btn {
-            background: #1e40af;
-            color: white;
-        }
-
-        .reset-btn {
-            background: #dc2626;
-            color: white;
         }
 
         button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            background: #ff6666;
         }
 
         #notification {
             position: fixed;
             top: 20px;
             right: 20px;
-            padding: 15px 25px;
-            border-radius: 8px;
-            background: #065f46;
-            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            background: rgba(0, 255, 0, 0.2);
             display: none;
-            animation: slideIn 0.3s ease;
-            z-index: 1000;
-        }
-
-        @keyframes slideIn {
-            from { transform: translateX(100%); }
-            to { transform: translateX(0); }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1 class="title">Advent Calendar Admin Panel</h1>
+            <h1 id="advent-calendar-admin-panel" class="title">Advent Calendar Admin Panel</h1>
         </div>
 
-        <div class="calendar-grid" id="configGrid"></div>
+        <div class="github-config">
+            <h3>GitHub Configuration</h3>
+        </div>
+
+        <div id="configGrid" class="calendar-grid"></div>
 
         <div id="notification"></div>
 
         <div class="control-panel">
-            <button class="save-btn" onclick="saveConfiguration()">Save Changes</button>
-            <button class="preview-btn" onclick="previewCalendar()">Preview Calendar</button>
-            <button class="reset-btn" onclick="resetConfiguration()">Reset All</button>
+            <button onclick="saveChanges()">Save Changes</button>
+            <button onclick="previewCalendar()">Preview Calendar</button>
+            <button onclick="resetAll()">Reset All</button>
         </div>
     </div>
 
     <script>
-        let currentConfig = {};
-
-        function loadConfiguration() {
-            const savedConfig = localStorage.getItem('calendarConfig');
-            currentConfig = savedConfig ? JSON.parse(savedConfig) : {};
-            createConfigGrid();
-        }
-
         function createConfigGrid() {
             const grid = document.getElementById('configGrid');
-            const layout = [1, 3, 4, 5, 6];
-            let boxNumber = 1;
+            const config = loadConfig();
+            
+            for (let i = 1; i <= 24; i++) {
+                const box = document.createElement('div');
+                box.className = 'config-box';
+                
+                const label = document.createElement('label');
+                label.textContent = `Day ${i}`;
+                
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.placeholder = 'Image URL';
+                input.value = config[i]?.imageUrl || '';
+                input.setAttribute('data-day', i);
+                
+                const preview = document.createElement('img');
+                preview.className = 'preview-image';
+                preview.src = config[i]?.imageUrl || '';
+                preview.alt = `Day ${i} preview`;
+                
+                input.addEventListener('input', (e) => {
+                    preview.src = e.target.value;
+                });
+                
+                box.appendChild(label);
+                box.appendChild(input);
+                box.appendChild(preview);
+                grid.appendChild(box);
+            }
+        }
 
-            layout.forEach(boxCount => {
-                const row = document.createElement('div');
-                row.className = 'grid-row';
-                
-                for (let i = 0; i < boxCount; i++) {
-                    if (boxNumber <= 19) {
-                        row.appendChild(createConfigBox(boxNumber));
-                        boxNumber++;
-                    }
+        function loadConfig() {
+            const config = localStorage.getItem('calendarConfig');
+            return config ? JSON.parse(config) : {};
+        }
+
+        function saveChanges() {
+            const config = {};
+            const inputs = document.querySelectorAll('input[data-day]');
+            
+            inputs.forEach(input => {
+                const day = input.getAttribute('data-day');
+                const imageUrl = input.value.trim();
+                if (imageUrl) {
+                    config[day] = { imageUrl };
                 }
-                
-                grid.appendChild(row);
             });
 
-            const trunkRow = document.createElement('div');
-            trunkRow.className = 'grid-row';
-            trunkRow.appendChild(createConfigBox(20, true));
-            grid.appendChild(trunkRow);
-        }
-
-        function createConfigBox(number, isTrunk = false) {
-            const box = document.createElement('div');
-            box.className = `box-config ${isTrunk ? 'trunk' : 'regular'}`;
-            
-            const title = document.createElement('div');
-            title.textContent = isTrunk ? 'Trunk Content' : `Box ${number}`;
-            box.appendChild(title);
-
-            const preview = document.createElement('div');
-            preview.className = 'preview-area empty';
-            preview.textContent = 'Click to upload image';
-            
-            if (currentConfig[number] && currentConfig[number].image) {
-                preview.innerHTML = `<img src="${currentConfig[number].image}" alt="Box ${number}">`;
-                preview.classList.remove('empty');
-            }
-
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = 'image/*';
-            input.style.display = 'none';
-            input.onchange = (e) => handleImageUpload(e, number, preview);
-
-            preview.onclick = () => input.click();
-            box.appendChild(preview);
-            box.appendChild(input);
-
-            return box;
-        }
-
-        async function handleImageUpload(event, boxNumber, previewElement) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            try {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const imageUrl = e.target.result;
-                    currentConfig[boxNumber] = { image: imageUrl };
-                    
-                    previewElement.innerHTML = `<img src="${imageUrl}" alt="Box ${boxNumber}">`;
-                    previewElement.classList.remove('empty');
-                    
-                    showNotification('Image uploaded successfully!');
-                };
-                reader.readAsDataURL(file);
-            } catch (error) {
-                showNotification('Failed to upload image', true);
-                console.error('Upload error:', error);
-            }
-        }
-
-        function saveConfiguration() {
-            localStorage.setItem('calendarConfig', JSON.stringify(currentConfig));
-            showNotification('Configuration saved successfully!');
+            localStorage.setItem('calendarConfig', JSON.stringify(config));
+            showNotification('Changes saved successfully!');
         }
 
         function previewCalendar() {
-            saveConfiguration();
+            saveChanges();
             window.open('index.html', '_blank');
         }
 
-        function resetConfiguration() {
+        function resetAll() {
             if (confirm('Are you sure you want to reset all configurations?')) {
-                currentConfig = {};
                 localStorage.removeItem('calendarConfig');
-                createConfigGrid();
-                showNotification('Configuration reset successfully!');
+                location.reload();
             }
         }
 
-        function showNotification(message, isError = false) {
+        function showNotification(message) {
             const notification = document.getElementById('notification');
             notification.textContent = message;
-            notification.style.background = isError ? '#dc2626' : '#065f46';
             notification.style.display = 'block';
             
             setTimeout(() => {
@@ -321,7 +197,8 @@
             }, 3000);
         }
 
-        window.onload = loadConfiguration;
+        // Initialize the config grid when the page loads
+        document.addEventListener('DOMContentLoaded', createConfigGrid);
     </script>
 </body>
 </html>
