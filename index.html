@@ -1,226 +1,92 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advent Calendar</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-            background: linear-gradient(to bottom, #1a1a1a, #2d2d2d);
-            color: white;
-            font-family: Arial, sans-serif;
-            position: relative;
-            overflow: hidden;
-        }
+::: snowfall-left
+![Snowfall](https://img1.picmix.com/output/stamp/normal/9/9/1/4/2134199_1a9fd.gif)
+:::
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            position: relative;
-        }
+::: snowfall-right
+![Snowfall](https://img1.picmix.com/output/stamp/normal/9/9/1/4/2134199_1a9fd.gif)
+:::
 
-        .title {
-            text-align: center;
-            color: #ff4444;
-            margin-bottom: 40px;
-        }
+::::: toothless-container
+::: toothless-left
+![Toothless Left](https://media.tenor.com/lYLDkRGPHzQAAAAi/toothless-dancing.gif)
+:::
 
-        #loginOverlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
+::: toothless-right
+![Toothless Right](https://media.tenor.com/6aWBg0rV1EYAAAAj/toothless-dancing.gif)
+:::
+:::::
 
-        .login-box {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 30px;
-            border-radius: 10px;
-            text-align: center;
-            backdrop-filter: blur(5px);
-        }
+:::::::: container
+::::: {#loginOverlay}
+:::: login-box
+## 🎄 Enter Password 🎄
 
-        .login-box input {
-            margin: 10px;
-            padding: 8px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-        }
+::: {#errorContainer style="display: none;"}
+![Suspicious Rock](https://media.tenor.com/kHcmsxlKHEAAAAAM/rock-one-eyebrow-raised-rock-staring.gif){.error-image}
 
-        .login-box button {
-            margin-top: 10px;
-            padding: 8px 20px;
-            border-radius: 5px;
-            background: #ff4444;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
+🤨
+:::
 
-        #errorContainer {
-            margin-top: 20px;
-        }
+Enter
+::::
+:::::
 
-        .error-image {
-            width: 100px;
-            height: auto;
-            position: absolute;
-            left: 20px; /* Adjusted to be more to the left */
-            bottom: 20px;
-        }
+# Black Friday Sale Homepage LOL JK {#black-friday-sale-homepage-lol-jk .title}
 
-        .calendar-tree {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 15px;
-            max-width: 800px;
-            margin: 0 auto;
-            position: relative;
-        }
+:::: {#calendar .calendar-tree}
+::: tree-star
+⭐
+:::
+::::
+::::::::
 
-        .calendar-box {
-            aspect-ratio: 1;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.3s ease;
-        }
+<style>
+/* Add these styles to fix the issues */
+.snowfall-left img, .snowfall-right img {
+    position: fixed;
+    top: 15%; /* Move snowflakes higher but below tree */
+    z-index: 1;
+}
 
-        .calendar-box:hover {
-            transform: scale(1.05);
-        }
+.toothless-left img {
+    position: fixed;
+    left: 5%; /* Move Toothless more to the left */
+    bottom: 20px;
+}
 
-        .calendar-box.opened {
-            background: rgba(255, 255, 255, 0.2);
-        }
+.calendar-box .number {
+    transform: none; /* Remove any horizontal flipping */
+}
 
-        .box-number {
-            font-size: 24px;
-            color: white;
-            transform: scaleX(1); /* Fixed horizontally reversed numbers */
-        }
+/* Ensure images from admin config are visible */
+.calendar-box .preview-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+}
+</style>
 
-        .box-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 0;
-        }
-
-        .snowflake {
-            position: absolute;
-            width: 50px;
-            height: 50px;
-            pointer-events: none;
-            z-index: 1;
-            top: 15%; /* Adjusted to be slightly upper but not over the tree */
-        }
-
-        .snowflake.left {
-            left: 10%;
-        }
-
-        .snowflake.right {
-            right: 10%;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div id="loginOverlay">
-            <div class="login-box">
-                <h2>🎄 Enter Password 🎄</h2>
-                <input type="password" id="passwordInput">
-                <button onclick="checkPassword()">Enter</button>
-                <div id="errorContainer" style="display: none;">
-                    <img src="https://media.tenor.com/kHcmsxlKHEAAAAAM/rock-one-eyebrow-raised-rock-staring.gif" alt="Suspicious Rock" class="error-image">
-                    <span>🤨</span>
-                </div>
-            </div>
-        </div>
-
-        <h1 id="black-friday-sale-homepage-lol-jk" class="title">Black Friday Sale Homepage LOL JK</h1>
-
-        <div id="calendar" class="calendar-tree"></div>
-
-        <img src="path-to-snowflake.gif" class="snowflake left" alt="Snowflake">
-        <img src="path-to-snowflake.gif" class="snowflake right" alt="Snowflake">
-    </div>
-
-    <script>
-        const CORRECT_PASSWORD = 'your-password-here';
+<script>
+// Add this script to load and apply the admin configurations
+document.addEventListener('DOMContentLoaded', function() {
+    const config = localStorage.getItem('calendarConfig');
+    if (config) {
+        const boxes = document.querySelectorAll('.calendar-box');
+        const configData = JSON.parse(config);
         
-        function checkPassword() {
-            const password = document.getElementById('passwordInput').value;
-            if (password === CORRECT_PASSWORD) {
-                document.getElementById('loginOverlay').style.display = 'none';
-            } else {
-                document.getElementById('errorContainer').style.display = 'block';
-                setTimeout(() => {
-                    document.getElementById('errorContainer').style.display = 'none';
-                }, 3000);
+        boxes.forEach(box => {
+            const day = box.getAttribute('data-day');
+            if (configData[day] && configData[day].imageUrl) {
+                const img = document.createElement('img');
+                img.src = configData[day].imageUrl;
+                img.className = 'preview-image';
+                box.insertBefore(img, box.firstChild);
             }
-        }
-
-        function loadCalendarConfig() {
-            const config = localStorage.getItem('calendarConfig');
-            return config ? JSON.parse(config) : {};
-        }
-
-        function createCalendar() {
-            const calendar = document.getElementById('calendar');
-            const config = loadCalendarConfig();
-            
-            for (let i = 1; i <= 24; i++) {
-                const box = document.createElement('div');
-                box.className = 'calendar-box';
-                box.setAttribute('data-day', i);
-
-                // Apply configured image if available
-                if (config[i] && config[i].imageUrl) {
-                    const img = document.createElement('img');
-                    img.src = config[i].imageUrl;
-                    img.className = 'box-image';
-                    box.appendChild(img);
-                }
-
-                const number = document.createElement('div');
-                number.className = 'box-number';
-                number.textContent = i;
-                box.appendChild(number);
-
-                box.addEventListener('click', () => openBox(box));
-                calendar.appendChild(box);
-            }
-        }
-
-        function openBox(box) {
-            if (!box.classList.contains('opened')) {
-                box.classList.add('opened');
-                // Additional opening animation or effects can be added here
-            }
-        }
-
-        // Initialize the calendar when the page loads
-        document.addEventListener('DOMContentLoaded', createCalendar);
-    </script>
-</body>
-</html>
+        });
+    }
+});
+</script>
