@@ -12,7 +12,7 @@
             background: #f0f8ff;
             font-family: Arial, sans-serif;
             color: #333;
-            padding-bottom: 100px; /* Space for fixed control panel */
+            padding-bottom: 100px;
         }
 
         .container {
@@ -41,7 +41,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: min(4vh, 25px);
+            gap: min(3vh, 20px);
             padding-top: 40px;
             position: relative;
         }
@@ -53,7 +53,7 @@
         }
 
         .box-config {
-            width: 150px;
+            width: 110px; /* Slightly wider than calendar boxes for better editing */
             background: white;
             border-radius: 10px;
             padding: 15px;
@@ -69,10 +69,11 @@
         .box-config.trunk {
             background: linear-gradient(to bottom, #3E1D0B, #2B140A);
             color: white;
-            width: 200px; /* Wider trunk */
-            height: 250px; /* Taller trunk */
-            margin-top: 20px;
+            width: 128px; /* Match main page trunk width */
+            height: 220px; /* Slightly taller for upload interface */
+            margin-top: 5px;
             position: relative;
+            cursor: default;
         }
 
         .box-config.trunk::before {
@@ -95,7 +96,7 @@
 
         .preview-area {
             width: 100%;
-            height: 100px;
+            height: 90px; /* Match calendar box size */
             border: 2px dashed rgba(255,255,255,0.3);
             border-radius: 8px;
             margin: 10px 0;
@@ -120,8 +121,8 @@
         }
 
         .trunk .preview-area {
-            height: 180px;
-            margin-top: 20px;
+            height: 160px;
+            margin-top: 10px;
         }
 
         .control-panel {
@@ -207,17 +208,15 @@
     <script>
         let currentConfig = {};
 
-        // Load existing configuration
         function loadConfiguration() {
             const savedConfig = localStorage.getItem('calendarConfig');
             currentConfig = savedConfig ? JSON.parse(savedConfig) : {};
             createConfigGrid();
         }
 
-        // Create configuration grid
         function createConfigGrid() {
             const grid = document.getElementById('configGrid');
-            const layout = [1, 3, 4, 5, 6]; // New tree shape
+            const layout = [1, 3, 4, 5, 6];
             let boxNumber = 1;
 
             layout.forEach(boxCount => {
@@ -225,7 +224,7 @@
                 row.className = 'grid-row';
                 
                 for (let i = 0; i < boxCount; i++) {
-                    if (boxNumber <= 19) { // Regular boxes
+                    if (boxNumber <= 19) {
                         row.appendChild(createConfigBox(boxNumber));
                         boxNumber++;
                     }
@@ -234,20 +233,18 @@
                 grid.appendChild(row);
             });
 
-            // Add trunk
             const trunkRow = document.createElement('div');
             trunkRow.className = 'grid-row';
-            trunkRow.appendChild(createConfigBox(20, true)); // Trunk is box 20
+            trunkRow.appendChild(createConfigBox(20, true));
             grid.appendChild(trunkRow);
         }
 
-        // Create individual config box
         function createConfigBox(number, isTrunk = false) {
             const box = document.createElement('div');
             box.className = `box-config ${isTrunk ? 'trunk' : 'regular'}`;
             
             const title = document.createElement('div');
-            title.textContent = isTrunk ? 'Trunk Box (20)' : `Box ${number}`;
+            title.textContent = isTrunk ? 'Trunk Content' : `Box ${number}`;
             box.appendChild(title);
 
             const preview = document.createElement('div');
@@ -272,13 +269,11 @@
             return box;
         }
 
-        // Handle image upload
         async function handleImageUpload(event, boxNumber, previewElement) {
             const file = event.target.files[0];
             if (!file) return;
 
             try {
-                // Convert to base64 for localStorage
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     const imageUrl = e.target.result;
@@ -296,19 +291,16 @@
             }
         }
 
-        // Save configuration
         function saveConfiguration() {
             localStorage.setItem('calendarConfig', JSON.stringify(currentConfig));
             showNotification('Configuration saved successfully!');
         }
 
-        // Preview calendar
         function previewCalendar() {
             saveConfiguration();
             window.open('index.html', '_blank');
         }
 
-        // Reset configuration
         function resetConfiguration() {
             if (confirm('Are you sure you want to reset all configurations?')) {
                 currentConfig = {};
@@ -318,7 +310,6 @@
             }
         }
 
-        // Show notification
         function showNotification(message, isError = false) {
             const notification = document.getElementById('notification');
             notification.textContent = message;
@@ -330,7 +321,6 @@
             }, 3000);
         }
 
-        // Initialize
         window.onload = loadConfiguration;
     </script>
 </body>
