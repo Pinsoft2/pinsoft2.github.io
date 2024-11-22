@@ -82,7 +82,7 @@
         /* Snowfall effects - closer to tree */
         .snowfall-left, .snowfall-right {
             position: fixed;
-            top: -100px;
+            top: -50px;
             width: 900px;
             height: 900px;
             pointer-events: none;
@@ -126,6 +126,7 @@
             width: 100%;
             height: 100%;
             object-fit: contain;
+            z-index: 2;
         }
 
         .title {
@@ -239,6 +240,7 @@
 
         .opened .number {
             opacity: 1;
+            transform: rotateY(180deg);
         }
 
         .tree-trunk {
@@ -293,6 +295,8 @@
         <img src="https://img1.picmix.com/output/stamp/normal/9/9/1/4/2134199_1a9fd.gif" alt="Snowfall" />
     </div>
 
+    <div class="container">
+        
     <!-- Toothless Gifs -->
     <div class="toothless-left">
         <img src="https://media.tenor.com/lYLDkRGPHzQAAAAi/toothless-dancing.gif" alt="Toothless Left" />
@@ -301,7 +305,6 @@
         <img src="https://media.tenor.com/6aWBg0rV1EYAAAAj/toothless-dancing.gif" alt="Toothless Right" />
     </div>
 
-    <div class="container">
         <div id="loginOverlay">
             <div class="login-box">
                 <h2>See you, space</h2>
