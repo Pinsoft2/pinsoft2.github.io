@@ -36,8 +36,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(8px);
+            background: rgb(0, 0, 0);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -51,12 +50,6 @@
             width: 300px;
             text-align: center;
             box-shadow: 0 0 20px rgba(0,0,0,0.5);
-        }
-
-        .login-box h2 {
-            margin: 0 0 20px 0;
-            color: white;
-            font-size: 24px;
         }
 
         .login-box input {
@@ -86,7 +79,7 @@
             display: block;
         }
 
-        /* Snowfall effects */
+        /* Snowfall effects - closer to tree */
         .snowfall-left, .snowfall-right {
             position: fixed;
             top: -100px;
@@ -103,7 +96,6 @@
 
         .snowfall-right {
             right: -200px;
-            transform: scaleX(-1);
         }
 
         .snowfall-left img, .snowfall-right img {
@@ -112,7 +104,7 @@
             object-fit: contain;
         }
 
-        /* Toothless positioning */
+        /* Toothless positioning - lower */
         .toothless-left, .toothless-right {
             position: fixed;
             bottom: 150px;
@@ -162,6 +154,24 @@
             50% { transform: translateX(20px); }
         }
 
+        /* Sparkle Animation */
+        @keyframes sparkle {
+            0% { transform: scale(0) rotate(0deg); opacity: 0; }
+            50% { transform: scale(1.2) rotate(180deg); opacity: 1; }
+            100% { transform: scale(0) rotate(360deg); opacity: 0; }
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: linear-gradient(45deg, gold, white);
+            border-radius: 50%;
+            filter: blur(1px);
+            pointer-events: none;
+            z-index: 10;
+        }
+
         .calendar-tree {
             display: flex;
             flex-direction: column;
@@ -194,7 +204,6 @@
             transform-style: preserve-3d;
             perspective: 1000px;
             transition: transform 0.3s ease;
-            overflow: hidden;
         }
 
         .calendar-box:hover {
@@ -205,7 +214,6 @@
             font-size: 36px;
             position: relative;
             z-index: 1;
-            transition: opacity 0.3s ease;
         }
 
         .number {
@@ -213,7 +221,6 @@
             font-size: 28px;
             font-weight: bold;
             opacity: 0;
-            transition: opacity 0.3s ease;
             z-index: 2;
         }
 
@@ -275,27 +282,10 @@
             0%, 100% { text-shadow: 0 0 10px gold; }
             50% { text-shadow: 0 0 20px gold, 0 0 30px gold; }
         }
-
-        /* Sparkle Animation */
-        @keyframes sparkle {
-            0% { transform: scale(0) rotate(0deg); opacity: 0; }
-            50% { transform: scale(1.2) rotate(180deg); opacity: 1; }
-            100% { transform: scale(0) rotate(360deg); opacity: 0; }
-        }
-
-        .sparkle {
-            position: absolute;
-            width: 8px;
-            height: 8px;
-            background: linear-gradient(45deg, gold, white);
-            border-radius: 50%;
-            filter: blur(1px);
-            pointer-events: none;
-            z-index: 10;
-        }
     </style>
 </head>
 <body>
+    <!-- Snowfall Effects -->
     <div class="snowfall-left">
         <img src="https://img1.picmix.com/output/stamp/normal/9/9/1/4/2134199_1a9fd.gif" alt="Snowfall" />
     </div>
@@ -303,6 +293,7 @@
         <img src="https://img1.picmix.com/output/stamp/normal/9/9/1/4/2134199_1a9fd.gif" alt="Snowfall" />
     </div>
 
+    <!-- Toothless Gifs -->
     <div class="toothless-left">
         <img src="https://media.tenor.com/lYLDkRGPHzQAAAAi/toothless-dancing.gif" alt="Toothless Left" />
     </div>
@@ -361,9 +352,8 @@
         function createCalendar() {
             const calendar = document.getElementById('calendar');
             
-            // Create array of numbers 1-19 for randomization
+            // Create and shuffle numbers 1-19
             let numbers = Array.from({length: 19}, (_, i) => i + 1);
-            // Shuffle numbers
             for (let i = numbers.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [numbers[i], numbers[j]] = [numbers[j], numbers[i]];
@@ -385,7 +375,6 @@
                 calendar.appendChild(row);
             });
 
-            // Create trunk
             const trunkRow = document.createElement('div');
             trunkRow.className = 'tree-row';
             const trunk = createTrunk();
@@ -433,18 +422,18 @@
                 const gift = element.querySelector('.gift-emoji');
                 const number = element.querySelector('.number');
                 
-                if (gift) setTimeout(() => gift.style.display = 'none', 300);
+                if (gift) gift.style.display = 'none';
                 if (number) setTimeout(() => number.style.opacity = '1', 300);
             }
         }
+
+        window.onload = createCalendar;
 
         document.getElementById('passwordInput').addEventListener('keypress', function(event) {
             if (event.key === 'Enter') {
                 checkPassword();
             }
         });
-
-        window.onload = createCalendar;
     </script>
 </body>
 </html>
