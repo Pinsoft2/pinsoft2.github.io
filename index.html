@@ -1,11 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Previous head content remains same until styles -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Black Friday Sale Homepage LOL JK</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&display=swap" rel="stylesheet">
     <style>
-        /* Previous styles remain the same except for these updates */
-        
-        /* Updated snowflakes position */
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
+                            url('https://images.squarespace-cdn.com/content/v1/6029be12fff66b0cea7cc683/1e404cc4-cf27-4a58-a1bf-1af6ebd5f32d/OChristmasTree2.jpeg?format=1500w');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            font-family: Arial, sans-serif;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 1;
+        }
+
+        #loginOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .login-box {
+            background: #065f46;
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        .login-box h2 {
+            margin: 0 0 20px 0;
+            color: white;
+            font-size: 24px;
+        }
+
+        .login-box input {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .login-box button {
+            width: 90%;
+            padding: 10px;
+            background: #10b981;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .error-image {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin: 10px auto;
+            display: block;
+        }
+
+        /* Snowfall effects */
         .snowfall-left, .snowfall-right {
             position: fixed;
             top: -100px;
@@ -17,50 +98,268 @@
         }
 
         .snowfall-left {
-            left: -200px; /* Moved closer to tree */
+            left: -200px;
         }
 
         .snowfall-right {
-            right: -200px; /* Moved closer to tree */
+            right: -200px;
+            transform: scaleX(-1);
         }
 
-        /* Updated Toothless positions */
+        .snowfall-left img, .snowfall-right img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* Toothless positioning */
         .toothless-left, .toothless-right {
             position: fixed;
-            bottom: 150px; /* Lowered position */
+            bottom: 150px;
             width: 400px;
             height: 400px;
+            pointer-events: none;
+            z-index: 2;
         }
 
-        /* Complete blackout for login overlay */
-        #loginOverlay {
-            background: rgba(0, 0, 0, 0.95); /* Darker background */
-            backdrop-filter: blur(8px); /* Added blur effect */
+        .toothless-left {
+            left: 50px;
         }
 
-        /* Rest of the styles remain same */
+        .toothless-right {
+            right: 50px;
+        }
+
+        .toothless-left img, .toothless-right img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .title {
+            font-family: 'Bubblegum Sans', cursive;
+            font-size: 42px;
+            text-align: center;
+            margin-bottom: 30px;
+            animation: rainbow 4s linear infinite, bounce 3s ease-in-out infinite;
+            white-space: nowrap;
+            position: relative;
+            z-index: 2;
+        }
+
+        @keyframes rainbow {
+            0% { color: #ff0000; }
+            17% { color: #ff8000; }
+            33% { color: #ffff00; }
+            50% { color: #00ff00; }
+            67% { color: #00ffff; }
+            83% { color: #0000ff; }
+            100% { color: #ff0000; }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-20px); }
+            50% { transform: translateX(20px); }
+        }
+
+        .calendar-tree {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: min(3vh, 20px);
+            position: relative;
+            padding-top: 40px;
+            flex: 1;
+            justify-content: space-evenly;
+            z-index: 2;
+        }
+
+        .tree-row {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .calendar-box {
+            width: 90px;
+            height: 90px;
+            background: #065f46;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+            transition: transform 0.3s ease;
+            overflow: hidden;
+        }
+
+        .calendar-box:hover {
+            transform: scale(1.1);
+        }
+
+        .gift-emoji {
+            font-size: 36px;
+            position: relative;
+            z-index: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        .number {
+            position: absolute;
+            font-size: 28px;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 2;
+        }
+
+        @keyframes flipOpen {
+            0% { transform: rotateY(0deg); }
+            100% { transform: rotateY(180deg); }
+        }
+
+        .opened {
+            animation: flipOpen 0.6s forwards;
+        }
+
+        .opened .gift-emoji {
+            opacity: 0;
+        }
+
+        .opened .number {
+            opacity: 1;
+        }
+
+        .tree-trunk {
+            width: 128px;
+            height: 200px;
+            background: linear-gradient(to bottom, #3E1D0B, #2B140A);
+            border-radius: 8px;
+            margin-top: 5px;
+            position: relative;
+            cursor: default;
+        }
+
+        .tree-trunk::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: repeating-linear-gradient(
+                45deg,
+                rgba(43, 20, 10, 0.6) 0px,
+                rgba(43, 20, 10, 0.6) 2px,
+                transparent 2px,
+                transparent 4px
+            );
+            border-radius: 8px;
+        }
+
+        .tree-star {
+            position: absolute;
+            top: -30px;
+            font-size: 40px;
+            color: gold;
+            animation: glow 2s ease-in-out infinite;
+            text-shadow: 0 0 10px rgba(255,215,0,0.7);
+            z-index: 3;
+        }
+
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 10px gold; }
+            50% { text-shadow: 0 0 20px gold, 0 0 30px gold; }
+        }
+
+        /* Sparkle Animation */
+        @keyframes sparkle {
+            0% { transform: scale(0) rotate(0deg); opacity: 0; }
+            50% { transform: scale(1.2) rotate(180deg); opacity: 1; }
+            100% { transform: scale(0) rotate(360deg); opacity: 0; }
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: linear-gradient(45deg, gold, white);
+            border-radius: 50%;
+            filter: blur(1px);
+            pointer-events: none;
+            z-index: 10;
+        }
     </style>
 </head>
 <body>
-    <!-- Previous snowfall and toothless elements remain same -->
+    <div class="snowfall-left">
+        <img src="https://img1.picmix.com/output/stamp/normal/9/9/1/4/2134199_1a9fd.gif" alt="Snowfall" />
+    </div>
+    <div class="snowfall-right">
+        <img src="https://img1.picmix.com/output/stamp/normal/9/9/1/4/2134199_1a9fd.gif" alt="Snowfall" />
+    </div>
+
+    <div class="toothless-left">
+        <img src="https://media.tenor.com/lYLDkRGPHzQAAAAi/toothless-dancing.gif" alt="Toothless Left" />
+    </div>
+    <div class="toothless-right">
+        <img src="https://media.tenor.com/6aWBg0rV1EYAAAAj/toothless-dancing.gif" alt="Toothless Right" />
+    </div>
 
     <div class="container">
         <div id="loginOverlay">
             <div class="login-box">
                 <h2>See you, space</h2>
-                <!-- Rest of login box content remains same -->
+                <div id="errorContainer" style="display: none;">
+                    <img src="https://media.tenor.com/kHcmsxlKHEAAAAAM/rock-one-eyebrow-raised-rock-staring.gif" 
+                         alt="Suspicious Rock" 
+                         class="error-image">
+                    <p style="font-size: 40px;">🤨</p>
+                </div>
+                <input type="password" id="passwordInput" placeholder="Password">
+                <button onclick="checkPassword()">Enter</button>
             </div>
         </div>
 
-        <!-- Rest of container content remains same -->
+        <h1 class="title">Black Friday Sale Homepage LOL JK</h1>
+        
+        <div id="calendar" class="calendar-tree">
+            <div class="tree-star">⭐</div>
+        </div>
     </div>
 
     <script>
-        // Previous code remains same until createCalendar function
+        function checkPassword() {
+            const password = document.getElementById('passwordInput').value;
+            if (password === 'PP') {
+                window.location.href = 'admin.html';
+            } else if (password.toLowerCase() === 'cowboy') {
+                document.getElementById('loginOverlay').style.display = 'none';
+            } else {
+                document.getElementById('errorContainer').style.display = 'block';
+                document.getElementById('passwordInput').value = '';
+            }
+        }
+
+        function createSparkles(element) {
+            for (let i = 0; i < 12; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                sparkle.style.left = Math.random() * 100 + '%';
+                sparkle.style.top = Math.random() * 100 + '%';
+                sparkle.style.animation = 'sparkle 0.8s ease-in-out';
+                sparkle.style.animationDelay = (i * 0.1) + 's';
+                element.appendChild(sparkle);
+                setTimeout(() => sparkle.remove(), 1000);
+            }
+        }
 
         function createCalendar() {
             const calendar = document.getElementById('calendar');
-            const configs = JSON.parse(localStorage.getItem('calendarConfig') || '{}');
             
             // Create array of numbers 1-19 for randomization
             let numbers = Array.from({length: 19}, (_, i) => i + 1);
@@ -78,7 +377,7 @@
                 row.className = 'tree-row';
                 
                 for (let i = 0; i < boxCount && boxIndex < 19; i++) {
-                    const box = createBox(numbers[boxIndex], configs[boxIndex + 1]);
+                    const box = createBox(numbers[boxIndex]);
                     row.appendChild(box);
                     boxIndex++;
                 }
@@ -89,36 +388,41 @@
             // Create trunk
             const trunkRow = document.createElement('div');
             trunkRow.className = 'tree-row';
-            const trunk = createTrunk(configs[20]);
+            const trunk = createTrunk();
             trunkRow.appendChild(trunk);
             calendar.appendChild(trunkRow);
         }
 
-        function createBox(number, config) {
+        function createBox(number) {
             const box = document.createElement('div');
             box.className = 'calendar-box';
             
-            // Add gift emoji or configured image
-            if (config && config.image) {
-                const img = document.createElement('img');
-                img.src = config.image;
-                img.className = 'box-image';
-                box.appendChild(img);
-            } else {
-                const gift = document.createElement('div');
-                gift.className = 'gift-emoji';
-                gift.textContent = '🎁';
-                box.appendChild(gift);
-            }
+            const gift = document.createElement('div');
+            gift.className = 'gift-emoji';
+            gift.textContent = '🎁';
             
-            // Add hidden number
             const numberDiv = document.createElement('div');
             numberDiv.className = 'number';
             numberDiv.textContent = number;
+            
+            box.appendChild(gift);
             box.appendChild(numberDiv);
             
             box.onclick = () => handleBoxClick(box);
             return box;
+        }
+
+        function createTrunk() {
+            const trunk = document.createElement('div');
+            trunk.className = 'tree-trunk';
+            
+            const numberDiv = document.createElement('div');
+            numberDiv.className = 'number';
+            numberDiv.textContent = '20';
+            trunk.appendChild(numberDiv);
+            
+            trunk.onclick = () => handleBoxClick(trunk);
+            return trunk;
         }
 
         function handleBoxClick(element) {
@@ -126,18 +430,21 @@
                 element.classList.add('opened');
                 createSparkles(element);
                 
-                // Hide gift/image and show number
                 const gift = element.querySelector('.gift-emoji');
-                const image = element.querySelector('.box-image');
                 const number = element.querySelector('.number');
                 
-                if (gift) gift.style.display = 'none';
-                if (image) image.style.display = 'none';
+                if (gift) setTimeout(() => gift.style.display = 'none', 300);
                 if (number) setTimeout(() => number.style.opacity = '1', 300);
             }
         }
 
-        // Rest of the code remains same
+        document.getElementById('passwordInput').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                checkPassword();
+            }
+        });
+
+        window.onload = createCalendar;
     </script>
 </body>
 </html>
