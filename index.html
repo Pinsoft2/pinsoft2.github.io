@@ -37,12 +37,11 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgb(0, 0, 0);
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 1000;
-        }
 
         .login-box {
             background: #065f46;
@@ -387,20 +386,7 @@
    
 
     <div class="container">
-        <div id="loginOverlay">
-            <div class="login-box">
-                <h2>🎄 Enter Password 🎄</h2>
-                <div id="errorContainer" style="display: none;">
-                    <img src="https://media.tenor.com/kHcmsxlKHEAAAAAM/rock-one-eyebrow-raised-rock-staring.gif" 
-                         alt="Suspicious Rock" 
-                         class="error-image">
-                    <p style="font-size: 40px;">🤨</p>
-                </div>
-                <input type="password" id="passwordInput" placeholder="Password">
-                <button onclick="checkPassword()">Enter</button>
-            </div>
-        </div>
-         <div class="snowfall-left">
+                 <div class="snowfall-left">
         <img src="https://img1.picmix.com/output/stamp/normal/9/9/1/4/2134199_1a9fd.gif" alt="Snowfall" />
     </div>
     <div class="snowfall-right">
@@ -414,6 +400,21 @@
     <div class="toothless-right">
         <img src="https://media.tenor.com/6aWBg0rV1EYAAAAj/toothless-dancing.gif" alt="Toothless Right" />
     </div>
+
+    <div id="loginOverlay">
+            <div class="login-box">
+                <h2>✨🎄See you, space🎄✨</h2>
+                <div id="errorContainer" style="display: none;">
+                    <img src="https://media.tenor.com/kHcmsxlKHEAAAAAM/rock-one-eyebrow-raised-rock-staring.gif" 
+                         alt="Suspicious Rock" 
+                         class="error-image">
+                    <p style="font-size: 40px;">🤨</p>
+                </div>
+                <input type="password" id="passwordInput" placeholder="Password">
+                <button onclick="checkPassword()">Enter</button>
+            </div>
+        </div>
+        </div>
 
         <h1 class="title">Black Friday Sale Homepage LOL JK</h1>
         
@@ -431,17 +432,22 @@
 
     <script>
 
-        function checkPassword() {
-            const password = document.getElementById('passwordInput').value;
-            if (password === 'PP') {
-                window.location.href = 'admin.html';
-            } else if (password.toLowerCase() === 'cowboy') {
-                document.getElementById('loginOverlay').style.display = 'none';
-            } else {
-                document.getElementById('errorContainer').style.display = 'block';
-                document.getElementById('passwordInput').value = '';
-            }
-        }
+       function checkPassword() {
+    const password = document.getElementById('passwordInput').value;
+    const loginOverlay = document.getElementById('loginOverlay');
+    const errorContainer = document.getElementById('errorContainer');
+
+    if (password.toLowerCase() === 'cowboy') {
+        loginOverlay.style.display = 'none';
+        loginOverlay.style.opacity = '0';
+        loginOverlay.style.pointerEvents = 'none';
+    } else if (password === 'PP') {
+        window.location.href = 'admin.html';
+    } else {
+        errorContainer.style.display = 'block';
+        document.getElementById('passwordInput').value = '';
+    }
+}
 
         function createSparkles(element) {
             for (let i = 0; i < 12; i++) {
@@ -626,7 +632,13 @@
 
         window.onload = function() {
             createCalendar();
-            
+
+
+            document.getElementById('passwordInput').addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+        checkPassword();
+    }
+});
             // Add keypress event for trunk password
             document.getElementById('trunkPasswordInput').addEventListener('keypress', function(event) {
                 if (event.key === 'Enter') {
