@@ -45,15 +45,15 @@
 
         .login-box {
             background: #065f46;
-            padding: 20px;
+            padding: px;
             border-radius: 10px;
             width: 350px;
             text-align: center;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            box-shadow: 0 0 px rgba(0,0,0,0.5);
         }
 
         .login-box input {
-            width: 200px;
+            width: 0px;
             padding: 10px;
             margin: 10px 0;
             border: none;
@@ -61,7 +61,7 @@
         }
 
         .login-box button {
-            width: 200px;
+            width: 0px;
             padding: 10px;
             background: #10b981;
             color: white;
@@ -71,8 +71,8 @@
         }
 
         .error-image {
-            width: 200px;
-            height: 200px;
+            width: 0px;
+            height: 0px;
             object-fit: cover;
             border-radius: 10px;
             margin: 10px auto;
@@ -151,8 +151,8 @@
         }
 
         @keyframes bounce {
-            0%, 100% { transform: translateX(-20px); }
-            50% { transform: translateX(20px); }
+            0%, 100% { transform: translateX(-px); }
+            50% { transform: translateX(px); }
         }
 
         /* Sparkle Animation */
@@ -177,7 +177,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: min(3vh, 20px);
+            gap: min(3vh, px);
             position: relative;
             padding-top: 40px;
             flex: 1;
@@ -187,7 +187,7 @@
 
         .tree-row {
             display: flex;
-            gap: 20px;
+            gap: px;
             justify-content: center;
         }
 
@@ -245,12 +245,14 @@
 
         .tree-trunk {
             width: 128px;
-            height: 200px;
+            height: 0px;
             background: linear-gradient(to bottom, #3E1D0B, #2B140A);
             border-radius: 8px;
             margin-top: 5px;
             position: relative;
             cursor: default;
+            display: flex;
+            justify-content: center;
         }
 
         .tree-trunk::before {
@@ -262,8 +264,8 @@
             bottom: 0;
             background-image: repeating-linear-gradient(
                 45deg,
-                rgba(43, 20, 10, 0.6) 0px,
-                rgba(43, 20, 10, 0.6) 2px,
+                rgba(43, , 10, 0.6) 0px,
+                rgba(43, , 10, 0.6) 2px,
                 transparent 2px,
                 transparent 4px
             );
@@ -410,7 +412,7 @@
             
             const numberDiv = document.createElement('div');
             numberDiv.className = 'number';
-            numberDiv.textContent = '20';
+            numberDiv.textContent = '💖 SURPRISEEE 💖';
             trunk.appendChild(numberDiv);
             
             trunk.onclick = () => handleBoxClick(trunk);
