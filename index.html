@@ -227,15 +227,6 @@
         }
 
 
-	.Trunknumber {
-            position: absolute;
-            font-size: 14px;
-            font-weight: bold;
-            opacity: 0;
-            z-index: 2;
-        }
-
-	    
         @keyframes flipOpen {
             0% { transform: rotateY(0deg); }
             100% { transform: rotateY(180deg); }
@@ -279,6 +270,11 @@
 	    word-wrap: break-word; /* Allow text to wrap */
 	    line-height: 1.2;   /* Adjust line height for better readability */
 	    max-width: 100%;    /* Ensure text doesn't overflow */
+	}
+	    
+	.opened .Trunknumber {
+    	opacity: 1;
+   	 transform: rotateY(180deg);
 	}
 
         .tree-trunk::before {
