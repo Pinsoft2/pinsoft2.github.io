@@ -61,7 +61,7 @@
         }
 
         .login-box button {
-            width: 200px;
+            width: 100px;
             padding: 10px;
             background: #10b981;
             color: white;
@@ -226,6 +226,16 @@
             z-index: 2;
         }
 
+
+	.Trunknumber {
+            position: absolute;
+            font-size: 14px;
+            font-weight: bold;
+            opacity: 0;
+            z-index: 2;
+        }
+
+	    
         @keyframes flipOpen {
             0% { transform: rotateY(0deg); }
             100% { transform: rotateY(180deg); }
@@ -315,7 +325,7 @@
                     <img src="https://media.tenor.com/kHcmsxlKHEAAAAAM/rock-one-eyebrow-raised-rock-staring.gif" 
                          alt="Suspicious Rock" 
                          class="error-image">
-                    <p style="font-size: 40px;">🤨</p>
+<!--                     <p style="font-size: 40px;">🤨</p> -->
                 </div>
                 <input type="password" id="passwordInput" placeholder="Password">
                 <button onclick="checkPassword()">Enter</button>
@@ -412,8 +422,8 @@
             trunk.className = 'tree-trunk';
             
             const numberDiv = document.createElement('div');
-            numberDiv.className = 'number';
-            numberDiv.textContent = '💖 SURPRISEEE 💖';
+            numberDiv.className = 'Trunknumber';
+            numberDiv.textContent = '💖SURPRISEEE💖';
             trunk.appendChild(numberDiv);
             
             trunk.onclick = () => handleBoxClick(trunk);
