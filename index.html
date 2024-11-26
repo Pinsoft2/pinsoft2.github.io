@@ -45,15 +45,15 @@
 
         .login-box {
             background: #065f46;
-            padding: px;
+            padding: 20px;
             border-radius: 10px;
             width: 350px;
             text-align: center;
-            box-shadow: 0 0 px rgba(0,0,0,0.5);
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
         }
 
         .login-box input {
-            width: 0px;
+            width: 200px;
             padding: 10px;
             margin: 10px 0;
             border: none;
@@ -61,7 +61,7 @@
         }
 
         .login-box button {
-            width: 0px;
+            width: 200px;
             padding: 10px;
             background: #10b981;
             color: white;
@@ -71,8 +71,8 @@
         }
 
         .error-image {
-            width: 0px;
-            height: 0px;
+            width: 200px;
+            height: 200px;
             object-fit: cover;
             border-radius: 10px;
             margin: 10px auto;
@@ -129,6 +129,7 @@
             z-index: 2;
         }
 
+
         .title {
             font-family: 'Bubblegum Sans', cursive;
             font-size: 42px;
@@ -151,8 +152,8 @@
         }
 
         @keyframes bounce {
-            0%, 100% { transform: translateX(-px); }
-            50% { transform: translateX(px); }
+            0%, 100% { transform: translateX(-20px); }
+            50% { transform: translateX(20px); }
         }
 
         /* Sparkle Animation */
@@ -177,7 +178,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: min(3vh, px);
+            gap: min(3vh, 20px);
             position: relative;
             padding-top: 40px;
             flex: 1;
@@ -187,7 +188,7 @@
 
         .tree-row {
             display: flex;
-            gap: px;
+            gap: 20px;
             justify-content: center;
         }
 
@@ -245,13 +246,13 @@
 
         .tree-trunk {
             width: 128px;
-            height: 0px;
+            height: 200px;
             background: linear-gradient(to bottom, #3E1D0B, #2B140A);
             border-radius: 8px;
             margin-top: 5px;
             position: relative;
             cursor: default;
-            display: flex;
+	    display: flex;
             justify-content: center;
         }
 
@@ -264,8 +265,8 @@
             bottom: 0;
             background-image: repeating-linear-gradient(
                 45deg,
-                rgba(43, , 10, 0.6) 0px,
-                rgba(43, , 10, 0.6) 2px,
+                rgba(43, 20, 10, 0.6) 0px,
+                rgba(43, 20, 10, 0.6) 2px,
                 transparent 2px,
                 transparent 4px
             );
