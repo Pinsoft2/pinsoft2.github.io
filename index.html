@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Holiday Calendar</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
     <style>
         body {
             margin: 0;
@@ -13,39 +11,73 @@
             min-height: 100vh;
             font-family: Arial, sans-serif;
         }
-
+        .snowfall-left, .snowfall-right {
+            position: fixed;
+            top: 0;
+            pointer-events: none;
+        }
+        .snowfall-left { left: 0; }
+        .snowfall-right { right: 0; }
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
             position: relative;
         }
-
-        .snowfall-left, .snowfall-right {
-            position: fixed;
-            top: 0;
-            pointer-events: none;
-        }
-
-        .snowfall-left { left: 0; }
-        .snowfall-right { right: 0; }
-
         .toothless-left, .toothless-right {
             position: fixed;
             bottom: 0;
             pointer-events: none;
         }
-
         .toothless-left { left: 0; }
         .toothless-right { right: 0; }
-
+        #loginOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .login-box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+        .login-box input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .login-box button {
+            width: 100%;
+            padding: 10px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .error-image {
+            width: 100px;
+            height: 100px;
+            margin: 10px auto;
+        }
         .title {
             text-align: center;
             color: white;
             font-size: 2em;
             margin-bottom: 2em;
         }
-
         .calendar-tree {
             max-width: 800px;
             margin: 0 auto;
@@ -53,19 +85,16 @@
             flex-direction: column;
             align-items: center;
         }
-
         .tree-star {
             font-size: 3em;
             color: yellow;
             margin-bottom: 20px;
         }
-
         .tree-row {
             display: flex;
             justify-content: center;
             margin-bottom: 10px;
         }
-
         .tree-box {
             width: 60px;
             height: 60px;
@@ -78,15 +107,11 @@
             cursor: pointer;
             border-radius: 5px;
             transition: all 0.3s;
-            font-size: 1.2em;
         }
-
         .tree-box.opened {
             background: #2E7D32;
-            transform: scale(0.95);
         }
-
-        .tree-trunk {
+        .tree-chunk {
             width: 100px;
             height: 100px;
             background: #8B4513;
@@ -97,60 +122,19 @@
             align-items: center;
             justify-content: center;
             color: white;
-            transition: all 0.3s;
-            text-align: center;
-            padding: 10px;
-            font-size: 0.9em;
         }
-
-        .tree-trunk.disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .tree-trunk:not(.disabled):hover {
-            transform: scale(1.05);
-        }
-
-        .modal {
+        .tree-modal {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            display: flex;
-            align-items: center;
+            background: rgba(0,0,0,0.8);
+            display: none;
             justify-content: center;
+            align-items: center;
             z-index: 1000;
         }
-
-        .modal-content {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            max-width: 400px;
-            width: 90%;
-        }
-
-        .modal input {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        .modal button {
-            background: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
         .santa {
             position: fixed;
             top: 50%;
@@ -159,20 +143,12 @@
             z-index: 1001;
             pointer-events: none;
         }
-
         @keyframes santa-run {
             from { left: -150px; }
             to { left: 100%; }
         }
-
         .santa.running {
             animation: santa-run 3s linear forwards;
-        }
-
-        .error-image {
-            width: 100px;
-            height: 100px;
-            margin: 10px auto;
         }
     </style>
 </head>
@@ -180,116 +156,120 @@
     <div class="snowfall-left">
         <img src="https://img1.picmix.com/output/stamp/normal/9/9/1/4/2134199_1a9fd.gif" alt="Snowfall">
     </div>
+
     <div class="snowfall-right">
         <img src="https://img1.picmix.com/output/stamp/normal/9/9/1/4/2134199_1a9fd.gif" alt="Snowfall">
     </div>
+
     <div class="container">
         <div class="toothless-left">
             <img src="https://media.tenor.com/lYLDkRGPHzQAAAAi/toothless-dancing.gif" alt="Toothless Left">
         </div>
+
         <div class="toothless-right">
             <img src="https://media.tenor.com/6aWBg0rV1EYAAAAj/toothless-dancing.gif" alt="Toothless Right">
         </div>
-        <h1 class="title">Black Friday Sale Homepage LOL JK</h1>
-        <div class="calendar-tree">
+
+        <div id="loginOverlay">
+            <div class="login-box">
+                <h2>✨🎄See you, space🎄✨</h2>
+                <input type="text" placeholder="Enter password">
+                <button onclick="checkInitialPassword()">Enter</button>
+                <div id="errorContainer" style="display: none;">
+                    <img src="https://media.tenor.com/kHcmsxlKHEAAAAAM/rock-one-eyebrow-raised-rock-staring.gif" class="error-image" alt="Suspicious Rock">
+                    <div>🤨</div>
+                </div>
+            </div>
+        </div>
+
+        <h1 id="black-friday-sale-homepage-lol-jk" class="title">Black Friday Sale Homepage LOL JK</h1>
+
+        <div id="calendar" class="calendar-tree">
             <div class="tree-star">⭐</div>
-            <div id="treeBoxes"></div>
-            <div id="treeTrunk" class="tree-trunk disabled">
-                Open all boxes first!
+            <div class="tree-row"><div class="tree-box" onclick="handleBoxClick(1)">1</div></div>
+            <div class="tree-row">
+                <div class="tree-box" onclick="handleBoxClick(2)">2</div>
+                <div class="tree-box" onclick="handleBoxClick(3)">3</div>
+            </div>
+            <div class="tree-row">
+                <div class="tree-box" onclick="handleBoxClick(4)">4</div>
+                <div class="tree-box" onclick="handleBoxClick(5)">5</div>
+                <div class="tree-box" onclick="handleBoxClick(6)">6</div>
+            </div>
+            <div class="tree-row">
+                <div class="tree-box" onclick="handleBoxClick(7)">7</div>
+                <div class="tree-box" onclick="handleBoxClick(8)">8</div>
+                <div class="tree-box" onclick="handleBoxClick(9)">9</div>
+                <div class="tree-box" onclick="handleBoxClick(10)">10</div>
+            </div>
+            <div class="tree-row">
+                <div class="tree-box" onclick="handleBoxClick(11)">11</div>
+                <div class="tree-box" onclick="handleBoxClick(12)">12</div>
+                <div class="tree-box" onclick="handleBoxClick(13)">13</div>
+                <div class="tree-box" onclick="handleBoxClick(14)">14</div>
+                <div class="tree-box" onclick="handleBoxClick(15)">15</div>
+            </div>
+            <div class="tree-row">
+                <div class="tree-box" onclick="handleBoxClick(16)">16</div>
+                <div class="tree-box" onclick="handleBoxClick(17)">17</div>
+                <div class="tree-box" onclick="handleBoxClick(18)">18</div>
+                <div class="tree-box" onclick="handleBoxClick(19)">19</div>
+            </div>
+            <div class="tree-chunk" onclick="handleTreeClick()"></div>
+        </div>
+    </div>
+
+    <div class="tree-modal" id="treeModal">
+        <div class="login-box">
+            <h2>✨🎄See you, space🎄✨</h2>
+            <input type="text" placeholder="Who is the chosen one?">
+            <button onclick="checkTreePassword()">Enter</button>
+            <div id="treeErrorContainer" style="display: none;">
+                <img src="https://media.tenor.com/kHcmsxlKHEAAAAAM/rock-one-eyebrow-raised-rock-staring.gif" class="error-image" alt="Suspicious Rock">
+                <div>🤨</div>
             </div>
         </div>
     </div>
 
     <script>
-        const treeStructure = [
-            [1],
-            [2, 3],
-            [4, 5, 6],
-            [7, 8, 9, 10],
-            [11, 12, 13, 14, 15],
-            [16, 17, 18, 19]
-        ];
         let openBoxes = JSON.parse(localStorage.getItem('openBoxes') || '[]');
-        
-        function createTree() {
-            const treeDiv = document.getElementById('treeBoxes');
-            treeStructure.forEach(row => {
-                const rowDiv = document.createElement('div');
-                rowDiv.className = 'tree-row';
-                
-                row.forEach(num => {
-                    const box = document.createElement('div');
-                    box.className = `tree-box${openBoxes.includes(num) ? ' opened' : ''}`;
-                    box.textContent = num;
-                    box.onclick = () => handleBoxClick(num);
-                    rowDiv.appendChild(box);
-                });
-                
-                treeDiv.appendChild(rowDiv);
-            });
+        const totalBoxes = 19;
 
-            updateTrunkState();
+        // Initial password check
+        function checkInitialPassword() {
+            const input = document.querySelector('#loginOverlay input');
+            const errorContainer = document.getElementById('errorContainer');
+            
+            if (input.value === 'cowboy') {  // Replace with your initial password
+                document.getElementById('loginOverlay').style.display = 'none';
+            } else {
+                errorContainer.style.display = 'block';
+                input.value = '';
+            }
         }
 
+        // Box handling
         function handleBoxClick(boxNumber) {
             if (!openBoxes.includes(boxNumber)) {
                 openBoxes.push(boxNumber);
                 localStorage.setItem('openBoxes', JSON.stringify(openBoxes));
-                document.querySelector(`.tree-box:nth-child(${(boxNumber % 5) || 5})`).classList.add('opened');
-                updateTrunkState();
+                document.querySelectorAll('.tree-box')[boxNumber - 1].classList.add('opened');
             }
         }
 
-        function updateTrunkState() {
-            const trunk = document.getElementById('treeTrunk');
-            const totalBoxes = treeStructure.flat().length; // Should be 19
+        // Tree chunk handling
+        function handleTreeClick() {
             if (openBoxes.length === totalBoxes) {
-                trunk.classList.remove('disabled');
-                trunk.textContent = 'Click here!';
-            } else {
-                trunk.classList.add('disabled');
-                trunk.textContent = `Open all boxes first! (${openBoxes.length}/${totalBoxes})`;
+                document.getElementById('treeModal').style.display = 'flex';
             }
         }
 
-        function handleTrunkClick() {
-            const trunk = document.getElementById('treeTrunk');
-            if (openBoxes.length === treeStructure.flat().length && !trunk.classList.contains('disabled')) {
-                showPasswordPrompt();
-            }
-        }
-
-        function showPasswordPrompt() {
-            const modal = document.createElement('div');
-            modal.className = 'modal';
-            modal.innerHTML = `
-                <div class="modal-content">
-                    <h2>✨🎄See you, space🎄✨</h2>
-                    <input type="text" placeholder="Who is the chosen one?" id="passwordInput">
-                    <button onclick="checkPassword()">Enter</button>
-                    <div id="errorContainer" style="display: none;">
-                        <img src="https://media.tenor.com/kHcmsxlKHEAAAAAM/rock-one-eyebrow-raised-rock-staring.gif" class="error-image">
-                        <div>🤨</div>
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(modal);
-
-            const input = document.getElementById('passwordInput');
-            input.focus();
-            input.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    checkPassword();
-                }
-            });
-        }
-
-        function checkPassword() {
-            const input = document.getElementById('passwordInput');
-            const errorContainer = document.getElementById('errorContainer');
+        function checkTreePassword() {
+            const input = document.querySelector('#treeModal input');
+            const errorContainer = document.getElementById('treeErrorContainer');
             
             if (input.value === 'Alex') {
-                document.querySelector('.modal').remove();
+                document.getElementById('treeModal').style.display = 'none';
                 showSanta();
             } else {
                 errorContainer.style.display = 'block';
@@ -308,9 +288,23 @@
             }, 3000);
         }
 
-        // Initialize the page
-        createTree();
-        document.getElementById('treeTrunk').onclick = handleTrunkClick;
+        // Enter key support for both password inputs
+        document.querySelector('#loginOverlay input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                checkInitialPassword();
+            }
+        });
+
+        document.querySelector('#treeModal input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                checkTreePassword();
+            }
+        });
+
+        // Initialize opened boxes
+        openBoxes.forEach(boxNumber => {
+            document.querySelectorAll('.tree-box')[boxNumber - 1]?.classList.add('opened');
+        });
     </script>
 </body>
 </html>
