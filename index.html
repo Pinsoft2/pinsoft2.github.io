@@ -1,298 +1,195 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Holiday Portal</title>
+    <title>Black Friday Sale Homepage LOL JK</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&display=swap" rel="stylesheet">
     <style>
-        body {
-            margin: 0;
-            min-height: 100vh;
-            background: #000;
-            color: white;
-            font-family: Arial, sans-serif;
-            overflow: hidden;
+        /* Previous styles remain the same until we add new animations */
+        @keyframes portalSpin {
+            0% { transform: scale(0) rotate(0deg); opacity: 0; }
+            50% { transform: scale(1) rotate(360deg); opacity: 1; }
+            100% { transform: scale(0) rotate(720deg); opacity: 0; }
         }
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            position: relative;
-            text-align: center;
+        @keyframes trunkSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
-        .snowfall-left, .snowfall-right {
-            position: fixed;
-            top: 0;
-            width: 50px;
-            animation: snowfall 10s linear infinite;
-            pointer-events: none;
+        @keyframes spiralSparkle {
+            0% { transform: translate(-50%, -50%) rotate(0deg) translateX(0) scale(0); opacity: 0; }
+            50% { transform: translate(-50%, -50%) rotate(180deg) translateX(50px) scale(1); opacity: 1; }
+            100% { transform: translate(-50%, -50%) rotate(360deg) translateX(100px) scale(0); opacity: 0; }
         }
 
-        .snowfall-left {
-            left: 20%;
+        @keyframes explodeSparkle {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+            50% { transform: translate(var(--tx), var(--ty)) scale(1); opacity: 1; }
+            100% { transform: translate(calc(var(--tx) * 2), calc(var(--ty) * 2)) scale(0); opacity: 0; }
         }
 
-        .snowfall-right {
-            right: 20%;
-            animation-delay: -5s;
-        }
-
-        .toothless-left, .toothless-right {
-            position: fixed;
-            bottom: 20px;
-            width: 100px;
-        }
-
-        .toothless-left {
-            left: 20%;
-        }
-
-        .toothless-right {
-            right: 20%;
-        }
-
-        .title {
-            font-size: 2em;
-            margin-bottom: 40px;
-        }
-
-        #calendar {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin: 20px auto;
-            max-width: 600px;
-        }
-
-        .tree-star {
-            font-size: 2em;
-            text-align: center;
-            margin-bottom: 20px;
-            grid-column: span 3;
-        }
-
-        .box {
-            aspect-ratio: 1;
-            background: #2d5a27;
-            border-radius: 8px;
-            transition: background-color 0.3s;
-        }
-
-        .box.open {
-            background: #4CAF50;
-        }
-
-        .box.tree {
-            background: #8B4513;
-        }
-
-        #loginOverlay {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.8);
-            padding: 20px;
-            border-radius: 10px;
-            z-index: 100;
-            text-align: center;
-        }
-
-        .login-box h2 {
-            margin-top: 0;
-        }
-
-        #errorContainer {
-            margin-top: 10px;
-            display: none;
-        }
-
-        .error-image {
-            width: 100px;
-        }
-
-        .portal {
+        .magical-portal {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             width: 200px;
             height: 200px;
-            opacity: 0;
-            transition: opacity 2s;
+            background-image: url('https://i.pinimg.com/originals/4a/09/9b/4a099b1868c8f9b30f6c22236a05e736.gif');
+            background-size: cover;
+            display: none;
+            z-index: 100;
+        }
+
+        .portal-active {
+            display: block;
+            animation: portalSpin 3s ease-in-out forwards;
+        }
+
+        .trunk-spinning {
+            animation: trunkSpin 2s ease-in-out forwards;
+        }
+
+        .magical-sparkle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: radial-gradient(circle, gold, transparent);
+            border-radius: 50%;
             pointer-events: none;
         }
 
-        .portal.visible {
-            opacity: 1;
+        .spiral-sparkle {
+            animation: spiralSparkle 1.5s linear forwards;
         }
 
-        .portal circle {
-            transform-origin: center;
+        .explode-sparkle {
+            animation: explodeSparkle 1.5s linear forwards;
         }
 
-        .portal circle:nth-child(1) {
-            animation: pulse 2s infinite;
-        }
-
-        .portal circle:nth-child(2) {
-            animation: spin 4s linear infinite;
-        }
-
-        .portal circle:nth-child(3) {
-            animation: pulse 3s infinite;
-        }
-
-        .tree-spinning {
-            animation: spin 2s linear infinite;
-        }
-
-        @keyframes spin {
-            100% { transform: rotate(360deg); }
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 0.5; }
-            50% { transform: scale(1.1); opacity: 1; }
-            100% { transform: scale(1); opacity: 0.5; }
-        }
-
-        @keyframes snowfall {
-            0% { transform: translateY(-20px) rotate(0deg); }
-            100% { transform: translateY(100vh) rotate(360deg); }
-        }
-
-        input {
-            padding: 8px;
-            margin: 10px;
-            border-radius: 4px;
-            border: 1px solid #333;
-            background: #222;
+        #trunkPasswordPrompt {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(6, 95, 70, 0.95);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            z-index: 1000;
             color: white;
         }
 
-        button {
-            padding: 8px 16px;
-            border-radius: 4px;
-            border: none;
-            background: #4CAF50;
-            color: white;
-            cursor: pointer;
-        }
+        /* Rest of your existing styles remain the same */
 
-        button:hover {
-            background: #45a049;
-        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="snowfall-left">
-            <img src="https://img1.picmix.com/output/stamp/normal/9/9/1/4/2134199_1a9fd.gif" alt="Snowfall">
-        </div>
-
-        <div class="snowfall-right">
-            <img src="https://img1.picmix.com/output/stamp/normal/9/9/1/4/2134199_1a9fd.gif" alt="Snowfall">
-        </div>
-
-        <div class="toothless-left">
-            <img src="https://media.tenor.com/lYLDkRGPHzQAAAAi/toothless-dancing.gif" alt="Toothless Left">
-        </div>
-
-        <div class="toothless-right">
-            <img src="https://media.tenor.com/6aWBg0rV1EYAAAAj/toothless-dancing.gif" alt="Toothless Right">
-        </div>
-
-        <h1 class="title">Black Friday Sale Homepage LOL JK</h1>
-
-        <div id="calendar">
-            <div class="tree-star">⭐</div>
-            <div class="box"></div>
-            <div class="box"></div>
-            <div class="box"></div>
-            <div class="box"></div>
-            <div class="box"></div>
-            <div class="box"></div>
-            <div class="box"></div>
-            <div class="box tree"></div>
-        </div>
-
-        <div id="loginOverlay">
-            <div class="login-box">
-                <h2>✨🎄See you, space🎄✨</h2>
-                <div id="errorContainer">
-                    <img src="https://media.tenor.com/kHcmsxlKHEAAAAAM/rock-one-eyebrow-raised-rock-staring.gif" alt="Suspicious Rock" class="error-image">
-                    <p>🤨</p>
-                </div>
-                <input type="password" id="passwordInput" placeholder="Enter password...">
-                <button onclick="checkPassword()">Enter</button>
-            </div>
-        </div>
-
-        <svg class="portal" viewBox="0 0 100 100">
-            <circle cx="50" cy="50" r="45" fill="none" stroke="purple" stroke-width="2"/>
-            <circle cx="50" cy="50" r="35" fill="none" stroke="indigo" stroke-width="2"/>
-            <circle cx="50" cy="50" r="25" fill="none" stroke="blue" stroke-width="2"/>
-        </svg>
+    <!-- Previous HTML content remains the same until trunk password prompt -->
+    
+    <div id="trunkPasswordPrompt">
+        <h2>Only the chosen name shall pass</h2>
+        <input type="password" id="trunkPasswordInput" placeholder="Password">
+        <button onclick="checkTrunkPassword()">Enter</button>
     </div>
 
-    <script>
-        let inSecondPhase = false;
-        let portalTimer = null;
-        let boxes = document.querySelectorAll('.box');
-        let passwordInput = document.getElementById('passwordInput');
-        let errorContainer = document.getElementById('errorContainer');
+    <!-- Rest of your existing HTML -->
 
-        function checkPassword() {
-            let password = passwordInput.value;
-            
-            if (!inSecondPhase) {
-                if (password === 'cowboy' || password === 'PP') {
-                    let unopenedBox = Array.from(boxes).find(box => 
-                        !box.classList.contains('open') && !box.classList.contains('tree')
-                    );
-                    if (unopenedBox) {
-                        unopenedBox.classList.add('open');
-                        errorContainer.style.display = 'none';
-                        
-                        // Check if all regular boxes are open
-                        let allBoxesOpen = Array.from(boxes).every(box => 
-                            box.classList.contains('open') || box.classList.contains('tree')
-                        );
-                        
-                        if (allBoxesOpen && !portalTimer) {
-                            portalTimer = setTimeout(() => {
-                                document.querySelector('.portal').classList.add('visible');
-                                inSecondPhase = true;
-                                passwordInput.placeholder = "Only the chosen name shall pass";
-                            }, 120000); // 2 minutes
-                        }
-                    }
-                } else {
-                    errorContainer.style.display = 'block';
-                }
-            } else {
-                if (password.toLowerCase() === 'alex') {
-                    document.querySelector('.portal').style.opacity = '0';
-                    setTimeout(() => {
-                        document.querySelector('.tree').classList.add('tree-spinning');
-                    }, 1000);
-                } else {
-                    errorContainer.textContent = 'Only the chosen name shall pass...';
-                    errorContainer.style.display = 'block';
-                }
+    <script>
+        // Previous functions remain the same until trunk handling
+
+        function createMagicalSparkles(element) {
+            // Create spiral sparkles
+            for (let i = 0; i < 12; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'magical-sparkle spiral-sparkle';
+                sparkle.style.left = '50%';
+                sparkle.style.top = '50%';
+                sparkle.style.animationDelay = `${i * 0.1}s`;
+                element.appendChild(sparkle);
             }
-            
-            passwordInput.value = '';
+
+            // Create exploding sparkles
+            for (let i = 0; i < 12; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'magical-sparkle explode-sparkle';
+                sparkle.style.left = '50%';
+                sparkle.style.top = '50%';
+                const angle = (i / 12) * 360;
+                const tx = Math.cos(angle * Math.PI / 180) * 100;
+                const ty = Math.sin(angle * Math.PI / 180) * 100;
+                sparkle.style.setProperty('--tx', `${tx}px`);
+                sparkle.style.setProperty('--ty', `${ty}px`);
+                sparkle.style.animationDelay = `${i * 0.1}s`;
+                element.appendChild(sparkle);
+            }
+
+            setTimeout(() => {
+                const sparkles = element.querySelectorAll('.magical-sparkle');
+                sparkles.forEach(s => s.remove());
+            }, 2000);
         }
 
-        passwordInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                checkPassword();
+        function handleTrunkClick() {
+            document.getElementById('trunkPasswordPrompt').style.display = 'block';
+        }
+
+        function checkTrunkPassword() {
+            const password = document.getElementById('trunkPasswordInput').value;
+            if (password === 'Spy') {
+                document.getElementById('trunkPasswordPrompt').style.display = 'none';
+                
+                // Create and animate portal
+                const portal = document.createElement('div');
+                portal.className = 'magical-portal portal-active';
+                document.body.appendChild(portal);
+
+                // After portal animation, spin trunk and show number
+                setTimeout(() => {
+                    portal.remove();
+                    const trunk = document.querySelector('.tree-trunk');
+                    trunk.classList.add('trunk-spinning');
+                    createMagicalSparkles(trunk);
+
+                    // Center and show number after spin
+                    setTimeout(() => {
+                        const number = document.createElement('div');
+                        number.className = 'number';
+                        number.style.opacity = '1';
+                        number.style.transform = 'none';
+                        number.style.position = 'absolute';
+                        number.style.left = '50%';
+                        number.style.top = '50%';
+                        number.style.transform = 'translate(-50%, -50%)';
+                        number.textContent = '20';
+                        trunk.appendChild(number);
+                    }, 2000);
+                }, 3000);
             }
-        });
+        }
+
+        function createTrunk() {
+            const trunk = document.createElement('div');
+            trunk.className = 'tree-trunk';
+            trunk.onclick = handleTrunkClick;
+            return trunk;
+        }
+
+        // Rest of your existing script remains the same
+
+        window.onload = function() {
+            createCalendar();
+            
+            // Add keypress event for trunk password
+            document.getElementById('trunkPasswordInput').addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    checkTrunkPassword();
+                }
+            });
+        };
     </script>
 </body>
 </html>
