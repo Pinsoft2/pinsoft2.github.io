@@ -294,20 +294,65 @@
             border-radius: 8px;
         }
 
-        .tree-star {
-            position: absolute;
-            top: -30px;
-            font-size: 40px;
-            color: gold;
-            animation: glow 2s ease-in-out infinite;
-            text-shadow: 0 0 10px rgba(255,215,0,0.7);
-            z-index: 3;
-        }
+       @keyframes glow {
+    from {
+        text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #e60073,
+            0 0 40px #e60073, 0 0 50px #e60073, 0 0 60px #e60073, 0 0 70px #e60073;
+    }
+    to {
+        text-shadow: 0 0 20px #fff, 0 0 30px #ff4da6, 0 0 40px #ff4da6,
+            0 0 50px #ff4da6, 0 0 60px #ff4da6, 0 0 70px #ff4da6, 0 0 80px #ff4da6;
+    }
+}
 
-        @keyframes glow {
-            0%, 100% { text-shadow: 0 0 10px gold; }
-            50% { text-shadow: 0 0 20px gold, 0 0 30px gold; }
-        }
+.tree-star {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    animation: glow 1s ease-in-out infinite alternate;
+    transition: transform 0.3s ease;
+}
+
+.tree-star.expanded {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(20) rotate(360deg);
+    z-index: 1000;
+    transition: transform 1s ease;
+    animation: none; /* Stop the glow animation when expanded */
+}
+
+.password-prompt {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    z-index: 1001;
+    text-align: center;
+}
+
+.text-area-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1002;
+    display: none;
+}
+
+.text-area-container textarea {
+    width: 500px;
+    height: 300px;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
     </style>
 </head>
 <body>
@@ -351,116 +396,178 @@
     </div>
 
     <script>
-        function checkPassword() {
-            const password = document.getElementById('passwordInput').value;
-            if (password === 'PP') {
+<script>
+    function checkPassword() {
+        // Check which password input was used
+        const loginInput = document.getElementById('passwordInput');
+        const starInput = document.querySelector('.password-prompt input');
+        
+        // Handle login overlay password
+        if (loginInput === document.activeElement) {
+            if (loginInput.value === 'PP') {
                 window.location.href = 'admin.html';
-            } else if (password.toLowerCase() === 'cowboy') {
+            } else if (loginInput.value.toLowerCase() === 'cowboy') {
                 document.getElementById('loginOverlay').style.display = 'none';
             } else {
                 document.getElementById('errorContainer').style.display = 'block';
-                document.getElementById('passwordInput').value = '';
+                loginInput.value = '';
             }
         }
-
-        function createSparkles(element) {
-            for (let i = 0; i < 12; i++) {
-                const sparkle = document.createElement('div');
-                sparkle.className = 'sparkle';
-                sparkle.style.left = Math.random() * 100 + '%';
-                sparkle.style.top = Math.random() * 100 + '%';
-                sparkle.style.animation = 'sparkle 0.8s ease-in-out';
-                sparkle.style.animationDelay = (i * 0.1) + 's';
-                element.appendChild(sparkle);
-                setTimeout(() => sparkle.remove(), 1000);
+        // Handle star password
+        else if (starInput && starInput === document.activeElement) {
+            if (starInput.value === 'Spy') {
+                const promptDiv = starInput.closest('.password-prompt');
+                const star = document.querySelector('.tree-star');
+                
+                // Remove password prompt
+                promptDiv.remove();
+                
+                // Animate star
+                star.classList.add('expanded');
+                
+                // Create text area after animation
+                setTimeout(() => {
+                    let textAreaContainer = document.querySelector('.text-area-container');
+                    if (!textAreaContainer) {
+                        textAreaContainer = document.createElement('div');
+                        textAreaContainer.className = 'text-area-container';
+                        textAreaContainer.innerHTML = '<textarea placeholder="Enter your text here..."></textarea>';
+                        document.body.appendChild(textAreaContainer);
+                    }
+                    textAreaContainer.style.display = 'block';
+                }, 1000);
+            } else {
+                starInput.value = '';
+                starInput.placeholder = 'Try again...';
             }
         }
+    }
 
-        function createCalendar() {
-            const calendar = document.getElementById('calendar');
+    function createSparkles(element) {
+        for (let i = 0; i < 12; i++) {
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            sparkle.style.left = Math.random() * 100 + '%';
+            sparkle.style.top = Math.random() * 100 + '%';
+            sparkle.style.animation = 'sparkle 0.8s ease-in-out';
+            sparkle.style.animationDelay = (i * 0.1) + 's';
+            element.appendChild(sparkle);
+            setTimeout(() => sparkle.remove(), 1000);
+        }
+    }
+
+    function createCalendar() {
+        const calendar = document.getElementById('calendar');
+        
+        // Create and shuffle numbers 1-19
+        let numbers = Array.from({length: 19}, (_, i) => i + 1);
+        for (let i = numbers.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [numbers[i], numbers[j]] = [numbers[j], numbers[i]];
+        }
+        
+        const layout = [1, 3, 4, 5, 6];
+        let boxIndex = 0;
+
+        layout.forEach(boxCount => {
+            const row = document.createElement('div');
+            row.className = 'tree-row';
             
-            // Create and shuffle numbers 1-19
-            let numbers = Array.from({length: 19}, (_, i) => i + 1);
-            for (let i = numbers.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [numbers[i], numbers[j]] = [numbers[j], numbers[i]];
+            for (let i = 0; i < boxCount && boxIndex < 19; i++) {
+                const box = createBox(numbers[boxIndex]);
+                row.appendChild(box);
+                boxIndex++;
             }
             
-            const layout = [1, 3, 4, 5, 6];
-            let boxIndex = 0;
+            calendar.appendChild(row);
+        });
 
-            layout.forEach(boxCount => {
-                const row = document.createElement('div');
-                row.className = 'tree-row';
-                
-                for (let i = 0; i < boxCount && boxIndex < 19; i++) {
-                    const box = createBox(numbers[boxIndex]);
-                    row.appendChild(box);
-                    boxIndex++;
-                }
-                
-                calendar.appendChild(row);
-            });
+        const trunkRow = document.createElement('div');
+        trunkRow.className = 'tree-row';
+        const trunk = createTrunk();
+        trunkRow.appendChild(trunk);
+        calendar.appendChild(trunkRow);
+    }
 
-            const trunkRow = document.createElement('div');
-            trunkRow.className = 'tree-row';
-            const trunk = createTrunk();
-            trunkRow.appendChild(trunk);
-            calendar.appendChild(trunkRow);
+    function createBox(number) {
+        const box = document.createElement('div');
+        box.className = 'calendar-box';
+        
+        const gift = document.createElement('div');
+        gift.className = 'gift-emoji';
+        gift.textContent = '🎁';
+        
+        const numberDiv = document.createElement('div');
+        numberDiv.className = 'number';
+        numberDiv.textContent = number;
+        
+        box.appendChild(gift);
+        box.appendChild(numberDiv);
+        
+        box.onclick = () => handleBoxClick(box);
+        return box;
+    }
+
+    function createTrunk() {
+        const trunk = document.createElement('div');
+        trunk.className = 'tree-trunk';
+        
+        const numberDiv = document.createElement('div');
+        numberDiv.className = 'Trunknumber';
+        numberDiv.textContent = '💖SURPRISEEE💖';
+        trunk.appendChild(numberDiv);
+        
+        trunk.onclick = () => handleBoxClick(trunk);
+        return trunk;
+    }
+
+    function handleBoxClick(element) {
+        if (!element.classList.contains('opened')) {
+            element.classList.add('opened');
+            createSparkles(element);
+            
+            const gift = element.querySelector('.gift-emoji');
+            const number = element.querySelector('.number');
+            
+            if (gift) gift.style.display = 'none';
+            if (number) setTimeout(() => number.style.opacity = '1', 300);
         }
+    }
 
-        function createBox(number) {
-            const box = document.createElement('div');
-            box.className = 'calendar-box';
-            
-            const gift = document.createElement('div');
-            gift.className = 'gift-emoji';
-            gift.textContent = '🎁';
-            
-            const numberDiv = document.createElement('div');
-            numberDiv.className = 'number';
-            numberDiv.textContent = number;
-            
-            box.appendChild(gift);
-            box.appendChild(numberDiv);
-            
-            box.onclick = () => handleBoxClick(box);
-            return box;
-        }
-
-        function createTrunk() {
-            const trunk = document.createElement('div');
-            trunk.className = 'tree-trunk';
-            
-            const numberDiv = document.createElement('div');
-            numberDiv.className = 'Trunknumber';
-            numberDiv.textContent = '💖SURPRISEEE💖';
-            trunk.appendChild(numberDiv);
-            
-            trunk.onclick = () => handleBoxClick(trunk);
-            return trunk;
-        }
-
-        function handleBoxClick(element) {
-            if (!element.classList.contains('opened')) {
-                element.classList.add('opened');
-                createSparkles(element);
+    window.onload = function() {
+        createCalendar();
+        
+        const star = document.querySelector('.tree-star');
+        let promptDiv = null;
+        
+        star.addEventListener('click', () => {
+            if (!promptDiv) {
+                promptDiv = document.createElement('div');
+                promptDiv.className = 'password-prompt';
+                promptDiv.innerHTML = `
+                    <p>Pinsoft ❤️</p>
+                    <input type="password" id="starPasswordInput">
+                    <button onclick="checkPassword()">Submit</button>
+                `;
+                document.body.appendChild(promptDiv);
                 
-                const gift = element.querySelector('.gift-emoji');
-                const number = element.querySelector('.number');
-                
-                if (gift) gift.style.display = 'none';
-                if (number) setTimeout(() => number.style.opacity = '1', 300);
-            }
-        }
-
-        window.onload = createCalendar;
-
-        document.getElementById('passwordInput').addEventListener('keypress', function(event) {
-            if (event.key === 'Enter') {
-                checkPassword();
+                // Add enter key support for star password
+                promptDiv.querySelector('input').addEventListener('keypress', function(event) {
+                    if (event.key === 'Enter') {
+                        checkPassword();
+                    }
+                });
             }
         });
+    }
+
+    // Add enter key support for login overlay
+    document.getElementById('passwordInput').addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+            checkPassword();
+        }
+    });
+</script>
     </script>
 </body>
 </html>
