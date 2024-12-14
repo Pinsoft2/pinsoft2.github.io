@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Black Friday Sale Homepage LOL JK</title>
     <link href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&display=swap" rel="stylesheet">
-<script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.48/build/spline-viewer.js"></script>
-<spline-viewer url="https://prod.spline.design/BnU1moifzQdMDAUG/scene.splinecode"></spline-viewer>
+    <script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.48/build/spline-viewer.js"></script>
     <style>
         body {
             margin: 0;
@@ -32,6 +31,16 @@
             z-index: 1;
         }
 
+         .spline-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        /* Adjust login overlay z-index */
         #loginOverlay {
             position: fixed;
             top: 0;
@@ -42,9 +51,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 1000;
+            z-index: 2000; /* Increased z-index */
         }
-
         .login-box {
             background: #065f46;
             padding: 20px;
@@ -358,6 +366,10 @@
     </style>
 </head>
 <body>
+	
+    <div class="spline-container">
+	<spline-viewer url="https://prod.spline.design/BnU1moifzQdMDAUG/scene.splinecode"></spline-viewer>
+    </div>
     <!-- Snowfall Effects -->
     <div class="snowfall-left">
         <img src="https://img1.picmix.com/output/stamp/normal/9/9/1/4/2134199_1a9fd.gif" alt="Snowfall" />
