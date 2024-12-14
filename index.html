@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Black Friday Sale Homepage LOL JK</title>
     <link href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&display=swap" rel="stylesheet">
-    <script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.48/build/spline-viewer.js"></script>
     <style>
         body {
             margin: 0;
@@ -31,39 +30,26 @@
             z-index: 1;
         }
 
-          .spline-container {
+        #loginOverlay {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 0;
-        }
-
-        .spline-container spline-viewer {
-            width: 100%;
-            height: 100%;
-        }
-
-        /* Modify login overlay styles */
-        #loginOverlay {
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(5px);
+            right: 0;
+            bottom: 0;
+            background: rgb(0, 0, 0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
         }
 
         .login-box {
-            background: rgba(6, 95, 70, 0.9);
-            backdrop-filter: blur(10px);
-        }
-
-        /* Make sure main content is above Spline but below login */
-        .container {
-            z-index: 1;
-        }
-
-	 /* Hide main content initially */
-        .main-content {
-            display: none;
+            background: #065f46;
+            padding: 20px;
+            border-radius: 10px;
+            width: 350px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
         }
 
         .login-box input {
@@ -370,54 +356,47 @@
     </style>
 </head>
 <body>
-    <!-- Spline Background -->
-    <div class="spline-container">
-        <spline-viewer url="https://prod.spline.design/BnU1moifzQdMDAUG/scene.splinecode"></spline-viewer>
+    <!-- Snowfall Effects -->
+    <div class="snowfall-left">
+        <img src="https://img1.picmix.com/output/stamp/normal/9/9/1/4/2134199_1a9fd.gif" alt="Snowfall" />
+    </div>
+    <div class="snowfall-right">
+        <img src="https://img1.picmix.com/output/stamp/normal/9/9/1/4/2134199_1a9fd.gif" alt="Snowfall" />
     </div>
 
-    <!-- Login Overlay -->
-    <div id="loginOverlay">
-        <div class="login-box">
-            <h2>✨🎄See you, space🎄✨</h2>
-            <div id="errorContainer" style="display: none;">
-                <img src="https://media.tenor.com/kHcmsxlKHEAAAAAM/rock-one-eyebrow-raised-rock-staring.gif" 
-                     alt="Suspicious Rock" 
-                     class="error-image">
+    <div class="container">
+        
+    <!-- Toothless Gifs -->
+    <div class="toothless-left">
+        <img src="https://media.tenor.com/lYLDkRGPHzQAAAAi/toothless-dancing.gif" alt="Toothless Left" />
+    </div>
+    <div class="toothless-right">
+        <img src="https://media.tenor.com/6aWBg0rV1EYAAAAj/toothless-dancing.gif" alt="Toothless Right" />
+    </div>
+
+        <div id="loginOverlay">
+            <div class="login-box">
+                <h2>✨🎄See you, space🎄✨</h2>
+                <div id="errorContainer" style="display: none;">
+                    <img src="https://media.tenor.com/kHcmsxlKHEAAAAAM/rock-one-eyebrow-raised-rock-staring.gif" 
+                         alt="Suspicious Rock" 
+                         class="error-image">
+<!--                     <p style="font-size: 40px;">🤨</p> -->
+                </div>
+                <input type="password" id="passwordInput" placeholder="Password">
+                <button onclick="checkPassword()">Enter</button>
             </div>
-            <input type="password" id="passwordInput" placeholder="Password">
-            <button onclick="checkPassword()">Enter</button>
+        </div>
+
+        <h1 class="title">Black Friday Sale Homepage LOL JK</h1>
+        
+        <div id="calendar" class="calendar-tree">
+            <div class="tree-star">⭐</div>
         </div>
     </div>
 
-    <!-- Main Content (Your Christmas Tree) -->
-    <div class="main-content">
-        <div class="container">
-            <!-- Your existing Christmas tree content goes here -->
-            <!-- Snowfall Effects -->
-            <div class="snowfall-left">
-                <img src="https://img1.picmix.com/output/stamp/normal/9/9/1/4/2134199_1a9fd.gif" alt="Snowfall" />
-            </div>
-            <div class="snowfall-right">
-                <img src="https://img1.picmix.com/output/stamp/normal/9/9/1/4/2134199_1a9fd.gif" alt="Snowfall" />
-            </div>
-            
-            <!-- Toothless Gifs -->
-            <div class="toothless-left">
-                <img src="https://media.tenor.com/lYLDkRGPHzQAAAAi/toothless-dancing.gif" alt="Toothless Left" />
-            </div>
-            <div class="toothless-right">
-                <img src="https://media.tenor.com/6aWBg0rV1EYAAAAj/toothless-dancing.gif" alt="Toothless Right" />
-            </div>
 
-            <h1 class="title">Black Friday Sale Homepage LOL JK</h1>
-            
-            <div id="calendar" class="calendar-tree">
-                <div class="tree-star">⭐</div>
-            </div>
-        </div>
-    </div>
-	
-    <script>
+<script>
     function checkPassword() {
         // Check which password input was used
         const loginInput = document.getElementById('passwordInput');
@@ -428,11 +407,7 @@
             if (loginInput.value === 'PP') {
                 window.location.href = 'admin.html';
             } else if (loginInput.value.toLowerCase() === 'cowboy') {
-                  // Hide login overlay
                 document.getElementById('loginOverlay').style.display = 'none';
-                // Show main content
-                document.querySelector('.main-content').style.display = 'block';
-		createCalendar();
             } else {
                 document.getElementById('errorContainer').style.display = 'block';
                 loginInput.value = '';
@@ -456,7 +431,7 @@
                     if (!textAreaContainer) {
                         textAreaContainer = document.createElement('div');
                         textAreaContainer.className = 'text-area-container';
-                        textAreaContainer.innerHTML = '"ILY 3000"';
+                        textAreaContainer.innerHTML = '<textarea placeholder="Enter your text here..."></textarea>';
                         document.body.appendChild(textAreaContainer);
                     }
                     textAreaContainer.style.display = 'block';
