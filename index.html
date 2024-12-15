@@ -29,28 +29,64 @@
             font-family: Arial, sans-serif;
             font-size: 18px;
             background: rgba(0, 0, 0, 0.5);
-            padding: px;
+            padding: 10px;
             border-radius: 5px;
+            display: none; /* Hide countdown initially */
+        }
+        #instruction {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-family: Arial, sans-serif;
+            font-size: 24px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 5px;
+            display: none; /* Hide instruction initially */
+            text-align: center;
         }
     </style>
 </head>
 <body>
-    <div id="countdown">Redirecting in: </div>
+    <div id="countdown">Redirecting in: 20</div>
+    <div id="instruction">Click anywhere to continue</div>
     <spline-viewer url="https://prod.spline.design/BnU1moifzQdMDAUG/scene.splinecode"></spline-viewer>
 
     <script>
-        let timeLeft = 20;
+        const viewer = document.querySelector('spline-viewer');
         const countdownElement = document.getElementById('countdown');
-        
-        const countdown = setInterval(() => {
-            timeLeft--;
-            countdownElement.textContent = `Redirecting in: ${timeLeft}`;
-            
-            if (timeLeft <= 0) {
-                clearInterval(countdown);
-                window.location.href = 'home.html';  // Changed to redirect to main.html
+        const instructionElement = document.getElementById('instruction');
+        let timeLeft = 20;
+        let countdownInterval;
+
+        // Wait for the Spline scene to load
+        viewer.addEventListener('load', () => {
+            console.log('Spline scene loaded');
+            instructionElement.style.display = 'block';
+        });
+
+        // Start countdown only after user interaction
+        document.addEventListener('mousedown', startCountdown, { once: true });
+
+        function startCountdown() {
+            // Only start if not already started
+            if (!countdownInterval) {
+                instructionElement.style.display = 'none';
+                countdownElement.style.display = 'block';
+                
+                countdownInterval = setInterval(() => {
+                    timeLeft--;
+                    countdownElement.textContent = `Redirecting in: ${timeLeft}`;
+                    
+                    if (timeLeft <= 0) {
+                        clearInterval(countdownInterval);
+                        window.location.href = 'home.html';
+                    }
+                }, 1000);
             }
-        }, 1000);
+        }
     </script>
 </body>
 </html>
