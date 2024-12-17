@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome</title>
     <script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.48/build/spline-viewer.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Alexa+Std:wght@400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
     <style>
         body {
             margin: 0;
@@ -17,11 +17,14 @@
             align-items: center;
             justify-content: center;
             background: #000;
+            overflow: hidden;
         }
         
         spline-viewer {
             width: 100%;
             height: 100%;
+            position: relative;
+            z-index: 2;
         }
         
         #countdown {
@@ -30,14 +33,16 @@
             left: 50%;
             transform: translate(-50%, -50%);
             color: white;
-            font-family: 'Alexa Std', Arial, sans-serif;
+            font-family: 'Audiowide', cursive;
             font-size: 42px;
-            background: rgba(0, 0, 0, 0.7);
             padding: 20px 40px;
-            border-radius: 5px;
             display: none;
-            z-index: 1000;
+            z-index: 1;
             text-align: center;
+            text-shadow: 
+                -3px 0 rgba(255,0,0,0.7),
+                3px 0 rgba(0,255,255,0.7);
+            animation: glitch 2s infinite;
         }
         
         #instruction {
@@ -46,54 +51,84 @@
             left: 50%;
             transform: translate(-50%, -50%);
             color: white;
-            font-family: 'Alexa Std', Arial, sans-serif;
+            font-family: 'Audiowide', cursive;
             font-size: 24px;
             background: rgba(0, 0, 0, 0.7);
             padding: 20px;
             border-radius: 5px;
             display: none;
             text-align: center;
-            z-index: 1000;
+            z-index: 3;
+        }
+
+        @keyframes glitch {
+            0% {
+                text-shadow: -3px 0 rgba(255,0,0,0.7),
+                            3px 0 rgba(0,255,255,0.7);
+            }
+            25% {
+                text-shadow: -2px 0 rgba(255,0,0,0.7),
+                            2px 0 rgba(0,255,255,0.7);
+            }
+            50% {
+                text-shadow: -4px 0 rgba(255,0,0,0.7),
+                            4px 0 rgba(0,255,255,0.7);
+            }
+            75% {
+                text-shadow: -2px 0 rgba(255,0,0,0.7),
+                            2px 0 rgba(0,255,255,0.7);
+            }
+            100% {
+                text-shadow: -3px 0 rgba(255,0,0,0.7),
+                            3px 0 rgba(0,255,255,0.7);
+            }
         }
     </style>
 </head>
 <body>
-    <div id="countdown">Redirecting in: 15</div>
-    <div id="instruction">Click anywhere to continue</div>
+    <div id="countdown">15</div>
+    <div id="instruction">Click and release to continue</div>
     <spline-viewer loading-anim-type="spinner-big-dark" url="https://prod.spline.design/A3pgMfjiN9L7VLvZ/scene.splinecode"></spline-viewer>
     
     <script>
         const viewer = document.querySelector('spline-viewer');
         const countdownElement = document.getElementById('countdown');
         const instructionElement = document.getElementById('instruction');
-        let timeLeft = 15; // Changed to 15 seconds
+        let timeLeft = 15;
         let countdownInterval;
+        let isMouseDown = false;
         
-        // Wait for the Spline scene to load
         viewer.addEventListener('load', () => {
             console.log('Spline scene loaded');
             instructionElement.style.display = 'block';
         });
         
-        // Add click event listener to the entire document
-        document.addEventListener('click', startCountdown, { once: true });
+        // Track mouse down
+        document.addEventListener('mousedown', () => {
+            isMouseDown = true;
+        });
+        
+        // Start countdown only on mouse up if mouse was down
+        document.addEventListener('mouseup', () => {
+            if (isMouseDown && !countdownInterval) {
+                startCountdown();
+            }
+            isMouseDown = false;
+        });
         
         function startCountdown() {
-            // Only start if not already started
-            if (!countdownInterval) {
-                instructionElement.style.display = 'none';
-                countdownElement.style.display = 'block';
+            instructionElement.style.display = 'none';
+            countdownElement.style.display = 'block';
+            
+            countdownInterval = setInterval(() => {
+                countdownElement.textContent = timeLeft;
+                timeLeft--;
                 
-                countdownInterval = setInterval(() => {
-                    timeLeft--;
-                    countdownElement.textContent = `Redirecting in: ${timeLeft}`;
-                    
-                    if (timeLeft <= 0) {
-                        clearInterval(countdownInterval);
-                        window.location.href = 'home.html';
-                    }
-                }, 1000);
-            }
+                if (timeLeft < 0) {
+                    clearInterval(countdownInterval);
+                    window.location.href = 'home.html';
+                }
+            }, 1000);
         }
     </script>
 </body>
