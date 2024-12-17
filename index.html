@@ -32,17 +32,19 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            color: white;
             font-family: 'Audiowide', cursive;
             font-size: 42px;
             padding: 20px 40px;
             display: none;
             z-index: 1;
             text-align: center;
+            color: #ffffff;
+            mix-blend-mode: difference;
             text-shadow: 
-                -3px 0 rgba(255,0,0,0.7),
-                3px 0 rgba(0,255,255,0.7);
+                -3px 0 #ff0000,
+                3px 0 #00ffff;
             animation: glitch 2s infinite;
+            font-weight: bold;
         }
         
         #instruction {
@@ -50,37 +52,44 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            color: white;
+            color: #ffffff;
             font-family: 'Audiowide', cursive;
             font-size: 24px;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.8);
             padding: 20px;
             border-radius: 5px;
             display: none;
             text-align: center;
             z-index: 3;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         @keyframes glitch {
             0% {
-                text-shadow: -3px 0 rgba(255,0,0,0.7),
-                            3px 0 rgba(0,255,255,0.7);
+                text-shadow: 
+                    -3px 0 #ff0000,
+                    3px 0 #00ffff;
             }
             25% {
-                text-shadow: -2px 0 rgba(255,0,0,0.7),
-                            2px 0 rgba(0,255,255,0.7);
+                text-shadow: 
+                    -2px 0 #ff0000,
+                    2px 0 #00ffff;
             }
             50% {
-                text-shadow: -4px 0 rgba(255,0,0,0.7),
-                            4px 0 rgba(0,255,255,0.7);
+                text-shadow: 
+                    -4px 0 #ff0000,
+                    4px 0 #00ffff;
             }
             75% {
-                text-shadow: -2px 0 rgba(255,0,0,0.7),
-                            2px 0 rgba(0,255,255,0.7);
+                text-shadow: 
+                    -2px 0 #ff0000,
+                    2px 0 #00ffff;
             }
             100% {
-                text-shadow: -3px 0 rgba(255,0,0,0.7),
-                            3px 0 rgba(0,255,255,0.7);
+                text-shadow: 
+                    -3px 0 #ff0000,
+                    3px 0 #00ffff;
             }
         }
     </style>
@@ -103,12 +112,10 @@
             instructionElement.style.display = 'block';
         });
         
-        // Track mouse down
         document.addEventListener('mousedown', () => {
             isMouseDown = true;
         });
         
-        // Start countdown only on mouse up if mouse was down
         document.addEventListener('mouseup', () => {
             if (isMouseDown && !countdownInterval) {
                 startCountdown();
