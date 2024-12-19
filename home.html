@@ -315,36 +315,32 @@
             height: 60px;
         }
 
-        .tree-star.expanded {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(20) rotate(360deg);
-            z-index: 1000;
-            transition: transform 1s ease;
-            animation: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 50%;
-            padding: 1em;
-        }
+    .tree-star.expanded {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(20) rotate(360deg);
+    z-index: 1000;
+    transition: transform 1s ease;
+    animation: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    padding: 1em;
+}
 
-    
-         .star-text {
-            display: none;
-            position: absolute;
-            text-align: center;
-            color: #000000;
-            font-size: 21px;
-            max-width: 70%;
-            white-space: pre-wrap;
-            line-height: 1.4;
-            font-family: 'Pacifico', cursive;
-        }
-
-
+.star-text {
+    display: none;
+    position: absolute;
+    text-align: center;
+    color: #000000;
+    font-size: calc(0.025em + 0.5vmin); /* Responsive font size */
+    max-width: 60%;
+    white-space: pre-wrap;
+    line-height: 1.3;
+    font-family: 'Pacifico', cursive;
+}
         .tree-star.expanded .star-text {
             display: block;
         }
@@ -375,21 +371,20 @@
         display: none; /* Will be shown after password entry */
     }
 
-     .close-star {
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        font-size: 24px;
-        color: #000;
-        cursor: pointer;
-        background: none;
-        border: none;
-        padding: 10px;
-        z-index: 1002;
-        transition: transform 0.3s ease;
-        display: none;
-    }
-    
+   .close-star {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: calc(0.03em + 0.5vmin);
+    color: #000;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 5px;
+    z-index: 1002;
+    transition: transform 0.3s ease;
+    display: none;
+}
     .close-star:hover {
         transform: scale(1.2);
     }
@@ -407,14 +402,16 @@
         <img src="https://img1.picmix.com/output/stamp/normal/9/9/1/4/2134199_1a9fd.gif" alt="Snowfall" />
     </div>
 
-    <div class="audio-controls">
-        <iframe 
-            id="ytplayer" 
-            src="https://www.youtube.com/embed/hPz7h_XK9EQ?autoplay=1&controls=1&mute=0&loop=1" 
-            allow="autoplay"
-            style="border: none; height: 40px; width: 300px;"
-        ></iframe>
-    </div>
+<div class="audio-controls">
+    <iframe 
+        id="ytplayer" 
+        src="https://www.youtube.com/embed/hPz7h_XK9EQ?autoplay=1&controls=1&mute=1&loop=1&start=0&end=50&enablejsapi=1" 
+        allow="autoplay; encrypted-media"
+        frameborder="0"
+        allowfullscreen
+        style="border: none; height: 40px; width: 300px;"
+    ></iframe>
+</div>
 
     <div class="container">
         <div class="toothless-left">
@@ -455,18 +452,52 @@
 
  <script>
 
+// First, load the IFrame Player API code
+var tag = document.createElement('script');
+tag.src = "https://www.youtube.com/iframe_api";
+var firstScriptTag = document.getElementsByTagName('script')[0];
+firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+var player;
+function onYouTubeIframeAPIReady() {
+    player = new YT.Player('ytplayer', {
+        events: {
+            'onStateChange': onPlayerStateChange
+        }
+    });
+}
+
+function onPlayerStateChange(event) {
+    // When video starts playing
+    if (event.data == YT.PlayerState.PLAYING) {
+        // Set a timer to unmute after 50 seconds
+        setTimeout(() => {
+            player.unMute();
+            player.setVolume(100);
+        }, 50000);
+    }
+}
+     
   function checkPassword() {
     const loginInput = document.getElementById('passwordInput');
     const starInput = document.querySelector('.password-prompt input');
     const audioControls = document.querySelector('.audio-controls');
     
-    // Handle login overlay password
     if (loginInput === document.activeElement) {
         if (loginInput.value === 'PP') {
             window.location.href = 'admin.html';
         } else if (loginInput.value.toLowerCase() === 'cowboy') {
             document.getElementById('loginOverlay').style.display = 'none';
-            audioControls.style.display = 'block'; // Show YouTube player
+            audioControls.style.display = 'block';
+            // Reset and start the video when showing controls
+            if (player && player.playVideo) {
+                player.playVideo();
+                player.mute();
+                setTimeout(() => {
+                    player.unMute();
+                    player.setVolume(100);
+                }, 50000);
+            }
         } else {
             document.getElementById('errorContainer').style.display = 'block';
             loginInput.value = '';
