@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Black Friday Sale Homepage LOL JK</title>
     <link href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&family=Audiowide&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
     <style>
         body {
             margin: 0;
@@ -314,36 +315,35 @@
             height: 60px;
         }
 
-           .tree-star.expanded {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%) scale(20) rotate(360deg);
-        z-index: 1000;
-        transition: transform 1s ease;
-        animation: none;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: rgba(0, 0, 0, 0.8);
-        border-radius: 50%;
-        padding: 1em;
+        .tree-star.expanded {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(20) rotate(360deg);
+            z-index: 1000;
+            transition: transform 1s ease;
+            animation: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 50%;
+            padding: 1em;
         }
 
-       .star-text {
-        display: none;
-        position: absolute;
-        text-align: center;
-        color: #000000;
-        font-size: 0.035em; /* Reduced from 0.05em */
-        max-width: 70%; /* Reduced from 80% */
-        white-space: pre-wrap;
-        line-height: 1.4;
-        font-family: 'Audiowide', cursive;
-        background: rgba(255, 255, 255, 0.9);
-        padding: 0.2em;
-        border-radius: 0.2em;
-    }
+    
+         .star-text {
+            display: none;
+            position: absolute;
+            text-align: center;
+            color: #000000;
+            font-size: 21px;
+            max-width: 70%;
+            white-space: pre-wrap;
+            line-height: 1.4;
+            font-family: 'Pacifico', cursive;
+        }
+
 
         .tree-star.expanded .star-text {
             display: block;
@@ -375,6 +375,28 @@
         display: none; /* Will be shown after password entry */
     }
 
+     .close-star {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        font-size: 24px;
+        color: #000;
+        cursor: pointer;
+        background: none;
+        border: none;
+        padding: 10px;
+        z-index: 1002;
+        transition: transform 0.3s ease;
+        display: none;
+    }
+    
+    .close-star:hover {
+        transform: scale(1.2);
+    }
+    
+    .tree-star.expanded .close-star {
+        display: block;
+    }
     </style>
 </head>
 <body>
@@ -418,14 +440,16 @@
         <h1 class="title">Black Friday Sale Homepage LOL JK</h1>
         
         <div id="calendar" class="calendar-tree">
-            <div class="tree-star">⭐
-                <div class="star-text">
-Eventually the materialistic things will turn into a worthless pile, so do our flesh. But memories last and that's what we are here for. 
-I hope clothes bring you warmth, hope sweets make you forget about bitterness in life, hope charger keeps your electronic always alive and online, 
-hope the headphone provides you a sanctuanry and everything reminds you of someone that loves you so so much.
-We are such fragile beings but I hope you forever safe and sound in my love.
-                </div>
-            </div>
+    <div class="tree-star">⭐
+        <button class="close-star" onclick="closeStarMessage()">×</button>
+        <div class="star-text">
+        Eventually the materialistic things will turn into a worthless pile, so do our flesh. But memories last and that's what we are here for. 
+        I hope clothes bring you warmth, hope sweets make you forget about bitterness in life, hope charger keeps your electronic always alive and online, 
+        hope the headphone provides you a sanctuanry and everything reminds you of someone that loves you so so much.
+        We are such fragile beings but I hope you forever safe and sound in my love.
+        </div>
+    </div>
+
         </div>
     </div>
 
@@ -589,4 +613,9 @@ We are such fragile beings but I hope you forever safe and sound in my love.
             checkPassword();
         }
     });
+
+    function closeStarMessage() {
+    const star = document.querySelector('.tree-star');
+    star.classList.remove('expanded');
+}
 </script>
