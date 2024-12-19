@@ -451,7 +451,7 @@
         </div>
     </div>
 
- <script>
+<script>
 // Load YouTube API
 var tag = document.createElement('script');
 tag.src = "https://www.youtube.com/iframe_api";
@@ -466,32 +466,43 @@ function onYouTubeIframeAPIReady() {
             'onStateChange': onPlayerStateChange
         }
     });
-
+}
 
 function onPlayerReady(event) {
-    // Start muted
-    player.mute();
+    // Ensure video is muted initially
+    event.target.mute();
     
     // Unmute after 50 seconds
     setTimeout(() => {
-        player.unMute();
-        player.setVolume(100);
+        if (player && player.unMute) {
+            player.unMute();
+            player.setVolume(100);
+            console.log('Unmuted after 50 seconds');
+        }
     }, 50000);
 }
 
 function onPlayerStateChange(event) {
-    // If video restarts, mute it again
     if (event.data === YT.PlayerState.PLAYING) {
-        player.mute();
-        // Set timeout to unmute again after 50 seconds
-        setTimeout(() => {
-            player.unMute();
-            player.setVolume(100);
-        }, 50000);
+        // Get current time of video
+        const currentTime = player.getCurrentTime();
+        
+        // If video is in the first 50 seconds, ensure it's muted
+        if (currentTime < 50) {
+            player.mute();
+            
+            // Set a timeout to unmute based on remaining time
+            const remainingTime = (50 - currentTime) * 1000;
+            setTimeout(() => {
+                if (player && player.unMute) {
+                    player.unMute();
+                    player.setVolume(100);
+                }
+            }, remainingTime);
+        }
     }
 }
-     
-// Update checkPassword function
+
 function checkPassword() {
     const loginInput = document.getElementById('passwordInput');
     const starInput = document.querySelector('.password-prompt input');
@@ -503,7 +514,10 @@ function checkPassword() {
         } else if (loginInput.value.toLowerCase() === 'cowboy') {
             document.getElementById('loginOverlay').style.display = 'none';
             audioControls.style.display = 'block';
-            // Player will already be muted from onPlayerReady
+            if (player && player.playVideo) {
+                player.playVideo(); // Start playing the video
+                console.log('Starting video after password');
+            }
         } else {
             document.getElementById('errorContainer').style.display = 'block';
             loginInput.value = '';
@@ -524,125 +538,126 @@ function checkPassword() {
     }
 }
 
+function createSparkles(element) {
+    for (let i = 0; i < 12; i++) {
+        const sparkle = document.createElement('div');
+        sparkle.className = 'sparkle';
+        sparkle.style.left = Math.random() * 100 + '%';
+        sparkle.style.top = Math.random() * 100 + '%';
+        sparkle.style.animation = 'sparkle 0.8s ease-in-out';
+        sparkle.style.animationDelay = (i * 0.1) + 's';
+        element.appendChild(sparkle);
+        setTimeout(() => sparkle.remove(), 1000);
+    }
+}
 
-    function createSparkles(element) {
-        for (let i = 0; i < 12; i++) {
-            const sparkle = document.createElement('div');
-            sparkle.className = 'sparkle';
-            sparkle.style.left = Math.random() * 100 + '%';
-            sparkle.style.top = Math.random() * 100 + '%';
-            sparkle.style.animation = 'sparkle 0.8s ease-in-out';
-            sparkle.style.animationDelay = (i * 0.1) + 's';
-            element.appendChild(sparkle);
-            setTimeout(() => sparkle.remove(), 1000);
+function createCalendar() {
+    const calendar = document.getElementById('calendar');
+    
+    // Create and shuffle numbers 1-19
+    let numbers = Array.from({length: 19}, (_, i) => i + 1);
+    for (let i = numbers.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [numbers[i], numbers[j]] = [numbers[j], numbers[i]];
+    }
+    
+    const layout = [1, 3, 4, 5, 6];
+    let boxIndex = 0;
+
+    layout.forEach(boxCount => {
+        const row = document.createElement('div');
+        row.className = 'tree-row';
+        
+        for (let i = 0; i < boxCount && boxIndex < 19; i++) {
+            const box = createBox(numbers[boxIndex]);
+            row.appendChild(box);
+            boxIndex++;
         }
+        
+        calendar.appendChild(row);
+    });
+
+    const trunkRow = document.createElement('div');
+    trunkRow.className = 'tree-row';
+    const trunk = createTrunk();
+    trunkRow.appendChild(trunk);
+    calendar.appendChild(trunkRow);
+}
+
+function createBox(number) {
+    const box = document.createElement('div');
+    box.className = 'calendar-box';
+    
+    const gift = document.createElement('div');
+    gift.className = 'gift-emoji';
+    gift.textContent = '🎁';
+    
+    const numberDiv = document.createElement('div');
+    numberDiv.className = 'number';
+    numberDiv.textContent = number;
+    
+    box.appendChild(gift);
+    box.appendChild(numberDiv);
+    
+    box.onclick = () => handleBoxClick(box);
+    return box;
+}
+
+function createTrunk() {
+    const trunk = document.createElement('div');
+    trunk.className = 'tree-trunk';
+    
+    const numberDiv = document.createElement('div');
+    numberDiv.className = 'Trunknumber';
+    numberDiv.textContent = '💖SURPRISEEE💖';
+    trunk.appendChild(numberDiv);
+    
+    trunk.onclick = () => handleBoxClick(trunk);
+    return trunk;
+}
+
+function handleBoxClick(element) {
+    if (!element.classList.contains('opened')) {
+        element.classList.add('opened');
+        createSparkles(element);
+        
+        const gift = element.querySelector('.gift-emoji');
+        const number = element.querySelector('.number');
+        
+        if (gift) gift.style.display = 'none';
+        if (number) setTimeout(() => number.style.opacity = '1', 300);
     }
+}
 
-    function createCalendar() {
-        const calendar = document.getElementById('calendar');
-        
-        // Create and shuffle numbers 1-19
-        let numbers = Array.from({length: 19}, (_, i) => i + 1);
-        for (let i = numbers.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [numbers[i], numbers[j]] = [numbers[j], numbers[i]];
-        }
-        
-        const layout = [1, 3, 4, 5, 6];
-        let boxIndex = 0;
+function closeStarMessage() {
+    const star = document.querySelector('.tree-star');
+    star.classList.remove('expanded');
+}
 
-        layout.forEach(boxCount => {
-            const row = document.createElement('div');
-            row.className = 'tree-row';
-            
-            for (let i = 0; i < boxCount && boxIndex < 19; i++) {
-                const box = createBox(numbers[boxIndex]);
-                row.appendChild(box);
-                boxIndex++;
-            }
-            
-            calendar.appendChild(row);
-        });
-
-        const trunkRow = document.createElement('div');
-        trunkRow.className = 'tree-row';
-        const trunk = createTrunk();
-        trunkRow.appendChild(trunk);
-        calendar.appendChild(trunkRow);
-    }
-
-    function createBox(number) {
-        const box = document.createElement('div');
-        box.className = 'calendar-box';
-        
-        const gift = document.createElement('div');
-        gift.className = 'gift-emoji';
-        gift.textContent = '🎁';
-        
-        const numberDiv = document.createElement('div');
-        numberDiv.className = 'number';
-        numberDiv.textContent = number;
-        
-        box.appendChild(gift);
-        box.appendChild(numberDiv);
-        
-        box.onclick = () => handleBoxClick(box);
-        return box;
-    }
-
-    function createTrunk() {
-        const trunk = document.createElement('div');
-        trunk.className = 'tree-trunk';
-        
-        const numberDiv = document.createElement('div');
-        numberDiv.className = 'Trunknumber';
-        numberDiv.textContent = '💖SURPRISEEE💖';
-        trunk.appendChild(numberDiv);
-        
-        trunk.onclick = () => handleBoxClick(trunk);
-        return trunk;
-    }
-
-    function handleBoxClick(element) {
-        if (!element.classList.contains('opened')) {
-            element.classList.add('opened');
-            createSparkles(element);
-            
-            const gift = element.querySelector('.gift-emoji');
-            const number = element.querySelector('.number');
-            
-            if (gift) gift.style.display = 'none';
-            if (number) setTimeout(() => number.style.opacity = '1', 300);
-        }
-    }
-
-   window.onload = function() {
+window.onload = function() {
     createCalendar();
     
     const star = document.querySelector('.tree-star');
     let promptDiv = null;
-
-        
-        star.addEventListener('click', () => {
-            if (!promptDiv) {
-                promptDiv = document.createElement('div');
-                promptDiv.className = 'password-prompt';
-                promptDiv.innerHTML = `
-                    <p>Pinsoft ❤️</p>
-                    <input type="password" id="starPasswordInput">
-                    <button onclick="checkPassword()">Submit</button>
-                `;
-                document.body.appendChild(promptDiv);
-                
-                promptDiv.querySelector('input').addEventListener('keypress', function(event) {
-                    if (event.key === 'Enter') {
-                        checkPassword();
-                    }
-                });
-            }
-        });
-
-    }
+    
+    star.addEventListener('click', () => {
+        if (!promptDiv) {
+            promptDiv = document.createElement('div');
+            promptDiv.className = 'password-prompt';
+            promptDiv.innerHTML = `
+                <p>Pinsoft ❤️</p>
+                <input type="password" id="starPasswordInput">
+                <button onclick="checkPassword()">Submit</button>
+            `;
+            document.body.appendChild(promptDiv);
+            
+            promptDiv.querySelector('input').addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    checkPassword();
+                }
+            });
+        }
+    });
 
     // Add enter key support for login overlay
     document.getElementById('passwordInput').addEventListener('keypress', function(event) {
@@ -650,9 +665,13 @@ function checkPassword() {
             checkPassword();
         }
     });
-
-    function closeStarMessage() {
-    const star = document.querySelector('.tree-star');
-    star.classList.remove('expanded');
 }
+
+// Initialize iframe with mute parameter
+document.addEventListener('DOMContentLoaded', function() {
+    const iframe = document.getElementById('ytplayer');
+    if (iframe) {
+        iframe.src = "https://www.youtube.com/embed/hPz7h_XK9EQ?enablejsapi=1&autoplay=1&controls=1&loop=1&playlist=hPz7h_XK9EQ&mute=1";
+    }
+});
 </script>
