@@ -321,11 +321,11 @@
     position: absolute;
     text-align: center;
     color: #000000;
-    font-size: 0.015em; /* Much smaller font size */
+    font-size: 0.7px; /* Much smaller font size */
     max-width: 50%; /* Reduced max-width */
     white-space: pre-wrap;
-    line-height: 1.2;
     font-family: 'Pacifico', cursive;
+    top:30px
 }
 
 .tree-star.expanded {
@@ -407,9 +407,9 @@
 <div class="audio-controls">
     <iframe 
         id="ytplayer" 
-        src="https://www.youtube.com/embed/hPz7h_XK9EQ?autoplay=1&controls=1&loop=1" 
+        src="https://www.youtube.com/embed/hPz7h_XK9EQ?enablejsapi=1&autoplay=1&controls=1&loop=1&playlist=hPz7h_XK9EQ" 
         allow="autoplay; encrypted-media"
-        style="border: none; height: 100px; width: 300px;"
+        style="border: none; height: 40px; width: 300px;"
     ></iframe>
 </div>
     <div class="container">
@@ -439,9 +439,11 @@
     <div class="tree-star">⭐
         <button class="close-star" onclick="closeStarMessage()">×</button>
         <div class="star-text">
-        Eventually the materialistic things will turn into a worthless pile, so do our flesh. But memories last and that's what we are here for. 
-        I hope clothes bring you warmth, hope sweets make you forget about bitterness in life, hope charger keeps your electronic always alive and online, 
-        hope the headphone provides you a sanctuanry and everything reminds you of someone that loves you so so much.
+        Eventually the materialistic things will turn into a worthless pile, so do our flesh. 
+        But memories last and that's what we are here for. 
+        I hope clothes bring you warmth, hope sweets make you forget about bitterness in life, 
+        hope charger keeps your electronic always alive and online, hope the headphone provides you a sanctuanry 
+        and everything reminds you of someone that loves you so so much.
         We are such fragile beings but I hope you forever safe and sound in my love.
         </div>
     </div>
@@ -450,8 +452,7 @@
     </div>
 
  <script>
-
-// First, load the IFrame Player API code
+// Load YouTube API
 var tag = document.createElement('script');
 tag.src = "https://www.youtube.com/iframe_api";
 var firstScriptTag = document.getElementsByTagName('script')[0];
@@ -461,26 +462,28 @@ var player;
 function onYouTubeIframeAPIReady() {
     player = new YT.Player('ytplayer', {
         events: {
+            'onReady': onPlayerReady,
             'onStateChange': onPlayerStateChange
         }
     });
+
+
+function onPlayerReady(event) {
+    // Start muted
+    player.mute();
+    
+    // Unmute after 50 seconds
+    setTimeout(() => {
+        player.unMute();
+        player.setVolume(100);
+    }, 50000);
 }
 
-   function handleInitialMute() {
-    const iframe = document.getElementById('ytplayer');
-    iframe.style.display = 'none'; // Hide original iframe
-    
-    // Create a new iframe after 50 seconds with sound
-    setTimeout(() => {
-        iframe.src = "https://www.youtube.com/embed/hPz7h_XK9EQ?autoplay=1&controls=1&loop=1";
-        iframe.style.display = 'block';
-    }, 50000);
-}  
-
 function onPlayerStateChange(event) {
-    // When video starts playing
-    if (event.data == YT.PlayerState.PLAYING) {
-        // Set a timer to unmute after 50 seconds
+    // If video restarts, mute it again
+    if (event.data === YT.PlayerState.PLAYING) {
+        player.mute();
+        // Set timeout to unmute again after 50 seconds
         setTimeout(() => {
             player.unMute();
             player.setVolume(100);
@@ -500,7 +503,7 @@ function checkPassword() {
         } else if (loginInput.value.toLowerCase() === 'cowboy') {
             document.getElementById('loginOverlay').style.display = 'none';
             audioControls.style.display = 'block';
-            handleInitialMute(); // Start the mute handling
+            // Player will already be muted from onPlayerReady
         } else {
             document.getElementById('errorContainer').style.display = 'block';
             loginInput.value = '';
