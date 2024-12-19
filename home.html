@@ -314,30 +314,36 @@
             height: 60px;
         }
 
-        .tree-star.expanded {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(20) rotate(360deg);
-            z-index: 1000;
-            transition: transform 1s ease;
-            animation: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+           .tree-star.expanded {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(20) rotate(360deg);
+        z-index: 1000;
+        transition: transform 1s ease;
+        animation: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.8);
+        border-radius: 50%;
+        padding: 1em;
         }
 
-        .star-text {
-            display: none;
-            position: absolute;
-            text-align: center;
-            color: white;
-            font-size: 0.05em;
-            max-width: 80%;
-            white-space: pre-wrap;
-            line-height: 1.2;
-            font-family: 'Audiowide', cursive;
-        }
+       .star-text {
+        display: none;
+        position: absolute;
+        text-align: center;
+        color: #000000;
+        font-size: 0.035em; /* Reduced from 0.05em */
+        max-width: 70%; /* Reduced from 80% */
+        white-space: pre-wrap;
+        line-height: 1.4;
+        font-family: 'Audiowide', cursive;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 0.2em;
+        border-radius: 0.2em;
+    }
 
         .tree-star.expanded .star-text {
             display: block;
@@ -358,37 +364,17 @@
         width: 300px;
     }
 
-      .audio-controls {
+         .audio-controls {
         position: fixed;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 1000;
+        top: 20px;
+        left: 20px;
+        z-index: 3;
         background: rgba(6, 95, 70, 0.8);
-        padding: 10px 20px;
-        border-radius: 20px;
-        display: none; /* Hide by default */
-        gap: 10px;
-        align-items: center;
+        padding: 10px;
+        border-radius: 10px;
+        display: none; /* Will be shown after password entry */
     }
-        .audio-controls button {
-            background: #10b981;
-            border: none;
-            color: white;
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-family: 'Audiowide', cursive;
-            transition: all 0.3s ease;
-        }
 
-        .audio-controls button:hover {
-            background: #059669;
-        }
-
-        .volume-control {
-            width: 100px;
-        }
     </style>
 </head>
 <body>
@@ -400,11 +386,12 @@
     </div>
 
     <div class="audio-controls">
-        <button onclick="togglePlay()">Play/Pause</button>
-        <input type="range" class="volume-control" min="0" max="1" step="0.1" value="0.5" onchange="updateVolume(this.value)">
-        <audio id="bgMusic" loop>
-            <source src="your-music.mp3" type="audio/mp3">
-        </audio>
+        <iframe 
+            id="ytplayer" 
+            src="https://www.youtube.com/embed/hPz7h_XK9EQ?autoplay=1&controls=1&mute=0&loop=1" 
+            allow="autoplay"
+            style="border: none; height: 40px; width: 300px;"
+        ></iframe>
     </div>
 
     <div class="container">
@@ -443,35 +430,8 @@ We are such fragile beings but I hope you forever safe and sound in my love.
     </div>
 
  <script>
-    const audio = document.getElementById('bgMusic');
-    let isPlaying = false;
 
-  function togglePlay() {
-    if (isPlaying) {
-        audio.pause();
-    } else {
-        // Initialize audio with user interaction
-        audio.currentTime = 0; // Reset to start
-        let playPromise = audio.play();
-        if (playPromise !== undefined) {
-            playPromise.then(_ => {
-                console.log("Audio started playing");
-                isPlaying = true;
-            })
-            .catch(error => {
-                console.log("Playback failed", error);
-            });
-        }
-    }
-    isPlaying = !isPlaying;
-}
-
-function updateVolume(value) {
-    if (audio) {
-        audio.volume = value;
-    }
-}
-   function checkPassword() {
+  function checkPassword() {
     const loginInput = document.getElementById('passwordInput');
     const starInput = document.querySelector('.password-prompt input');
     const audioControls = document.querySelector('.audio-controls');
@@ -482,28 +442,27 @@ function updateVolume(value) {
             window.location.href = 'admin.html';
         } else if (loginInput.value.toLowerCase() === 'cowboy') {
             document.getElementById('loginOverlay').style.display = 'none';
-            // Show audio controls and start playing after successful login
-            audioControls.style.display = 'flex';
-            togglePlay(); // Start playing music automatically
+            audioControls.style.display = 'block'; // Show YouTube player
         } else {
             document.getElementById('errorContainer').style.display = 'block';
             loginInput.value = '';
         }
     }
-        // Handle star password
-        else if (starInput && starInput === document.activeElement) {
-            if (starInput.value === 'Spy') {
-                const promptDiv = starInput.closest('.password-prompt');
-                const star = document.querySelector('.tree-star');
-                
-                promptDiv.remove();
-                star.classList.add('expanded');
-            } else {
-                starInput.value = '';
-                starInput.placeholder = 'Try again...';
-            }
+    // Handle star password
+    else if (starInput && starInput === document.activeElement) {
+        if (starInput.value === 'Spy') {
+            const promptDiv = starInput.closest('.password-prompt');
+            const star = document.querySelector('.tree-star');
+            
+            promptDiv.remove();
+            star.classList.add('expanded');
+        } else {
+            starInput.value = '';
+            starInput.placeholder = 'Try again...';
         }
     }
+}
+
 
     function createSparkles(element) {
         for (let i = 0; i < 12; i++) {
@@ -600,17 +559,8 @@ function updateVolume(value) {
     createCalendar();
     
     const star = document.querySelector('.tree-star');
-    const audio = document.getElementById('bgMusic');
     let promptDiv = null;
-    
-    // Initialize audio
-    audio.volume = 0.5;
-    audio.load();
-    
-    // Ensure audio is ready to play
-    audio.addEventListener('canplaythrough', () => {
-        console.log("Audio loaded and ready to play");
-    });
+
         
         star.addEventListener('click', () => {
             if (!promptDiv) {
@@ -631,9 +581,6 @@ function updateVolume(value) {
             }
         });
 
-        // Initialize audio
-        audio.volume = 0.5;
-        audio.load();
     }
 
     // Add enter key support for login overlay
