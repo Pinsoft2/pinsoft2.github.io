@@ -373,13 +373,12 @@
         display: none; /* Will be shown after password entry */
     }
 
- 
 .close-star {
     position: absolute;
-    top: 5px;
-    right: 5px;
-    font-size: 0.02em;
-    color: #000;
+    top: -40px;          /* Changed from 5px */
+    right: -40px;        /* Changed from 5px */
+    font-size: 24px;     /* Changed from 0.02em */
+    color: white;        /* Changed from #000 */
     cursor: pointer;
     background: none;
     border: none;
@@ -387,8 +386,8 @@
     z-index: 1002;
     transition: transform 0.3s ease;
     display: none;
+    text-shadow: 0 0 10px rgba(0,0,0,0.5);  /* Added */
 }
-
     .close-star:hover {
         transform: scale(1.2);
     }
