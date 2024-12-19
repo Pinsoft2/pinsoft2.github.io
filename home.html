@@ -30,12 +30,16 @@
             z-index: 1;
         }
 
-        #loginOverlay {
+ #loginOverlay {
         position: fixed;
-        top: 20px;
-        right: 20px;
-        background: transparent;
-        display: block;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgb(0, 0, 0);
+        display: flex;
+        align-items: center;
+        justify-content: center;
         z-index: 1000;
     }
 
@@ -339,19 +343,20 @@
             display: block;
         }
 
-        .password-prompt {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(255, 255, 255, 0.9);
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.2);
-            z-index: 1001;
-            text-align: center;
-            color: pink;
-        }
+       .password-prompt {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(255, 255, 255, 0.9);
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        z-index: 1001;
+        text-align: center;
+        color: pink;
+        width: 300px;
+    }
 
       .audio-controls {
         position: fixed;
@@ -441,43 +446,50 @@ We are such fragile beings but I hope you forever safe and sound in my love.
     const audio = document.getElementById('bgMusic');
     let isPlaying = false;
 
-    function togglePlay() {
-        if (isPlaying) {
-            audio.pause();
-        } else {
-            // Initialize audio with user interaction
-            let playPromise = audio.play();
-            if (playPromise !== undefined) {
-                playPromise.catch(error => {
-                    console.log("Playback prevented by browser", error);
-                });
-            }
+  function togglePlay() {
+    if (isPlaying) {
+        audio.pause();
+    } else {
+        // Initialize audio with user interaction
+        audio.currentTime = 0; // Reset to start
+        let playPromise = audio.play();
+        if (playPromise !== undefined) {
+            playPromise.then(_ => {
+                console.log("Audio started playing");
+                isPlaying = true;
+            })
+            .catch(error => {
+                console.log("Playback failed", error);
+            });
         }
-        isPlaying = !isPlaying;
     }
+    isPlaying = !isPlaying;
+}
 
-    function updateVolume(value) {
+function updateVolume(value) {
+    if (audio) {
         audio.volume = value;
     }
-
-    function checkPassword() {
-        const loginInput = document.getElementById('passwordInput');
-        const starInput = document.querySelector('.password-prompt input');
-        const audioControls = document.querySelector('.audio-controls');
-        
-        // Handle login overlay password
-        if (loginInput === document.activeElement) {
-            if (loginInput.value === 'PP') {
-                window.location.href = 'admin.html';
-            } else if (loginInput.value.toLowerCase() === 'cowboy') {
-                document.getElementById('loginOverlay').style.display = 'none';
-                // Show audio controls after successful login
-                audioControls.style.display = 'flex';
-            } else {
-                document.getElementById('errorContainer').style.display = 'block';
-                loginInput.value = '';
-            }
+}
+   function checkPassword() {
+    const loginInput = document.getElementById('passwordInput');
+    const starInput = document.querySelector('.password-prompt input');
+    const audioControls = document.querySelector('.audio-controls');
+    
+    // Handle login overlay password
+    if (loginInput === document.activeElement) {
+        if (loginInput.value === 'PP') {
+            window.location.href = 'admin.html';
+        } else if (loginInput.value.toLowerCase() === 'cowboy') {
+            document.getElementById('loginOverlay').style.display = 'none';
+            // Show audio controls and start playing after successful login
+            audioControls.style.display = 'flex';
+            togglePlay(); // Start playing music automatically
+        } else {
+            document.getElementById('errorContainer').style.display = 'block';
+            loginInput.value = '';
         }
+    }
         // Handle star password
         else if (starInput && starInput === document.activeElement) {
             if (starInput.value === 'Spy') {
@@ -584,11 +596,21 @@ We are such fragile beings but I hope you forever safe and sound in my love.
         }
     }
 
-    window.onload = function() {
-        createCalendar();
-        
-        const star = document.querySelector('.tree-star');
-        let promptDiv = null;
+   window.onload = function() {
+    createCalendar();
+    
+    const star = document.querySelector('.tree-star');
+    const audio = document.getElementById('bgMusic');
+    let promptDiv = null;
+    
+    // Initialize audio
+    audio.volume = 0.5;
+    audio.load();
+    
+    // Ensure audio is ready to play
+    audio.addEventListener('canplaythrough', () => {
+        console.log("Audio loaded and ready to play");
+    });
         
         star.addEventListener('click', () => {
             if (!promptDiv) {
